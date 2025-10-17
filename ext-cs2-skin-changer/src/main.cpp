@@ -15,18 +15,32 @@ void Patches()
 
 int main()
 {
-    skindb->Dump();
+    //skindb->Dump();
 
-    overlay::SetupWindow(L"cs2 ext skin changer", L"cs2_overlay");
-    overlay::CreateDeviceD3D(overlay::Window);
+    //overlay::SetupWindow(L"cs2 ext skin changer", L"cs2_overlay");
+    //overlay::CreateDeviceD3D(overlay::Window);
  
     Patches();
 
-    std::cout << "[SkinChanger] Loaded Press Insert For Menu\n";
+    //std::cout << "[SkinChanger] Loaded Press Insert For Menu\n";
+    std::cout << "[SkinChanger] Loaded :)\n";
     Beep(400, 500);
 
     const auto client = mem->GetModuleBase(L"client.dll");
     
+    SkinInfo dlore = SkinInfo(344, "", true, Awp);
+    SkinInfo neonoir = SkinInfo(653, "", true, UspS);
+    SkinInfo FireSerpent = SkinInfo(180, "", true, Ak47);
+    SkinInfo m4fade = SkinInfo(1177, "", false, M4A1Silencer);
+    SkinInfo glockfade = SkinInfo(38, "", false, Glock);
+    SkinInfo deagleblaze = SkinInfo(37, "", false, Deagle);
+    vInv->AddSkin(dlore);
+    vInv->AddSkin(neonoir);
+    vInv->AddSkin(FireSerpent);
+    vInv->AddSkin(m4fade);
+    vInv->AddSkin(glockfade);
+    vInv->AddSkin(deagleblaze);
+
     while (true)
     {
         Sleep(10);
@@ -38,16 +52,15 @@ int main()
         if (!weapon || !item || !weaponDef)
             continue;
         
-        overlay::Render();
-        RenderMenu(weaponDef);
-        overlay::EndRender();
+        //overlay::Render();
+        //RenderMenu(weaponDef);
+        //overlay::EndRender();
         
-        //const SkinInfo& ActiveSkin = vInv->GetSkin(weaponDef);
+        const SkinInfo& ActiveSkin = vInv->GetSkin(weaponDef);
         //const SkinInfo ActiveSkin = SkinInfo(653, "usp", true, UspS);
         //const SkinInfo ActiveSkin = SkinInfo(796, "usp", false, UspS);
-        const SkinInfo ActiveSkin = SkinInfo(344, "", true, Awp);
+        //const SkinInfo ActiveSkin = SkinInfo(344, "", true, Awp);
         //const SkinInfo ActiveSkin = SkinInfo(917, "", false, Awp);
-        //std::cout << ActiveSkin.Paint << std::endl;
         if (weaponDef != ActiveSkin.weaponType)
             continue;
 
@@ -60,7 +73,7 @@ int main()
             mem->Write<ItemIds>(item + Offsets::m_iItemIDHigh, ItemIds::UseFallBackValues);
             mem->Write<int32_t>(weapon + Offsets::m_nFallbackPaintKit, ActiveSkin.Paint);
 
-            mem->WriteString(item + Offsets::m_szCustomNameOverride, "Niggawp");
+            //mem->WriteString(item + Offsets::m_szCustomNameOverride, "Niggawp");
 
             //mem->Write<int32_t>(weapon + Offsets::m_nFallbackStatTrak, 1337);
             

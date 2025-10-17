@@ -42,9 +42,6 @@ public:
 
     SkinInfo GetSkin(WeaponsEnum def)
     {
-        if (!skins->empty())
-            return SkinInfo();
-
         for (const auto& skin : *skins)
         {
             if (skin.weaponType == def)
