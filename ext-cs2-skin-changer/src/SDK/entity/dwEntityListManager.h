@@ -2,6 +2,13 @@
 
 #pragma once
 
+const uintptr_t client = mem->GetModuleBase(L"client.dll");
+
+uintptr_t GetLocalPlayer()
+{
+    return mem->Read<uintptr_t>(client + Offsets::dwLocalPlayerPawn);
+}
+
 uintptr_t GetEntityByHandle(const auto& handle)
 {
     static const auto entitylist = mem->Read<uintptr_t>(mem->GetModuleBase(L"client.dll") + Offsets::dwEntityList);

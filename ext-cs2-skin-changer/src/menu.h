@@ -5,14 +5,14 @@
 
 void RenderWeapons(const WeaponsEnum& CurrentType)
 {
-    std::vector<SkinInfo> skins = skindb->GetWeapons(CurrentType);
+    std::vector<SkinInfo_t> skins = skindb->GetWeapons(CurrentType);
 
     static char search_buffer[64] = "";
     static std::vector<int> filtered_indices;
 
     static int SelectedSkinIndex = -1;
 
-    SkinInfo currentSkin = vInv->GetSkin(CurrentType);
+    SkinInfo_t currentSkin = vInv->GetSkin(CurrentType);
 
     if (SelectedSkinIndex == -1 && currentSkin.Paint != 0)
     {
@@ -50,7 +50,7 @@ void RenderWeapons(const WeaponsEnum& CurrentType)
         {
             SelectedSkinIndex = idx;
 
-            SkinInfo newSkin;
+            SkinInfo_t newSkin;
             newSkin.Paint = skins[idx].Paint;
             newSkin.name = skins[idx].name;
             newSkin.bUsesOldModel = skins[idx].bUsesOldModel;

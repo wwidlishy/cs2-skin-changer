@@ -214,6 +214,18 @@ public:
         return Read<uintptr_t>(Vtable + (sizeof(uintptr_t) * Index));
     }
 
+    template<typename T>
+    T FindVtableFunctionIndex(uintptr_t Vtable, uintptr_t address)
+    {
+        for (T i = 0; i < pow(2, sizeof(T)); i++)
+        {
+            if (Read<uintptr_t>(Vtable + (sizeof(uintptr_t) * i)) == address)
+                return i;
+        }
+
+        return 0;
+    }
+
     bool IsAllocated(uintptr_t address)
     {
         MEMORY_BASIC_INFORMATION mbi;

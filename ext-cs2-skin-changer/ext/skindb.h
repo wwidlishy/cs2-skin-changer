@@ -14,19 +14,19 @@ static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* use
     return size * nmemb;
 }
 
-struct SkinInfo {
+struct SkinInfo_t {
     int Paint;  
-    std::string name;
     bool bUsesOldModel; 
+    std::string name;
     WeaponsEnum weaponType;
 };
 
 class VInv
 {
 private:
-    std::vector<SkinInfo>* skins = new std::vector<SkinInfo>();
+    std::vector<SkinInfo_t>* skins = new std::vector<SkinInfo_t>();
 public:
-    void AddSkin(SkinInfo& Skin)
+    void AddSkin(SkinInfo_t& Skin)
     {
         for (auto& skin : *skins)
         {
@@ -40,7 +40,7 @@ public:
         skins->push_back(Skin);
     }
 
-    SkinInfo GetSkin(WeaponsEnum def)
+    SkinInfo_t GetSkin(WeaponsEnum def)
     {
         for (const auto& skin : *skins)
         {
@@ -48,16 +48,16 @@ public:
                 return skin;
         }
 
-        return SkinInfo();
+        return SkinInfo_t();
     }
 };
 VInv* vInv = new VInv();
 
 class CSkinDB {
 private:
-    std::vector<SkinInfo>* knifeSkins = new std::vector<SkinInfo>();
-    std::vector<SkinInfo>* gloveSkins = new std::vector<SkinInfo>();
-    std::vector<SkinInfo>* weaponSkins = new std::vector<SkinInfo>();
+    std::vector<SkinInfo_t>* knifeSkins = new std::vector<SkinInfo_t>();
+    std::vector<SkinInfo_t>* gloveSkins = new std::vector<SkinInfo_t>();
+    std::vector<SkinInfo_t>* weaponSkins = new std::vector<SkinInfo_t>();
 
     std::string GetStringSafe(const nlohmann::json& j, const std::string& key) {
         if (!j.contains(key)) return "";
@@ -164,7 +164,7 @@ public:
             auto jsonData = nlohmann::json::parse(readBuffer);
 
             for (auto& skin : jsonData) {
-                SkinInfo info;
+                SkinInfo_t info;
                 info.Paint = GetPaintIndexSafe(skin);
                 info.name = GetStringSafe(skin, "name");
                 info.weaponType = GetDefPerString(info.name);
@@ -207,9 +207,9 @@ public:
         }
     }
 
-    std::vector<SkinInfo> GetWeapons(WeaponsEnum type = WeaponsEnum::none)
+    std::vector<SkinInfo_t> GetWeapons(WeaponsEnum type = WeaponsEnum::none)
     {
-        std::vector<SkinInfo> results;
+        std::vector<SkinInfo_t> results;
 
         for (const auto& skin : *weaponSkins)
         {

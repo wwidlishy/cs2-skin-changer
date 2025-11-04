@@ -3,9 +3,9 @@
 
 #pragma once
 
-uintptr_t GetHudWeapon(const uintptr_t localPlayer, const uintptr_t weapon)
+uintptr_t GetHudWeapon(const uintptr_t& weapon)
 {
-    const auto& armsBase = GetEntityByHandle(mem->Read<uint32_t>(localPlayer + Offsets::m_hHudModelArms));
+    const auto& armsBase = GetEntityByHandle(mem->Read<uint32_t>(GetLocalPlayer() + Offsets::m_hHudModelArms));
     const auto& armsNode = mem->Read<uintptr_t>(armsBase + Offsets::m_pGameSceneNode);
     for (uintptr_t viewModel = mem->Read<uintptr_t>(armsNode + Offsets::m_pChild); viewModel; viewModel = mem->Read<uintptr_t>(viewModel + Offsets::m_pNextSibling))
     {

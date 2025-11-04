@@ -90,7 +90,7 @@ public:
         return allocAddress;
     }
 
-    void CallFunction(const uintptr_t FuncAddress, std::vector<CArg> args = {})
+    void CallFunction(const uintptr_t FuncAddress, std::vector<CArg> args = {}, const bool BypassSafeDelay = false)
     {
         if (!FuncAddress)
             return;
@@ -125,6 +125,9 @@ public:
         //while (!GetAsyncKeyState(VK_HOME)) { if (GetAsyncKeyState(VK_END)) { mem->Free(codeCave, MemPage); return; } }
         mem->CallThread(codeCave);
         mem->Free(codeCave, MemPage);
+
+        if (!BypassSafeDelay)
+            Sleep(50);
     }
 };
 WCL* wcl = new WCL();

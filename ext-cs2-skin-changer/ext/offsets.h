@@ -27,6 +27,7 @@ namespace Offsets
     constexpr std::ptrdiff_t m_MeshGroupMask = cs2_dumper::schemas::client_dll::CModelState::m_MeshGroupMask; // uint64
 
     constexpr std::ptrdiff_t m_nSubclassID = cs2_dumper::schemas::client_dll::C_BaseEntity::m_nSubclassID; // uint64
+    constexpr std::ptrdiff_t m_bMeleeWeapon = cs2_dumper::schemas::client_dll::CCSWeaponBaseVData::m_bMeleeWeapon; // uint64
 
     constexpr std::ptrdiff_t m_nFallbackPaintKit = cs2_dumper::schemas::client_dll::C_EconEntity::m_nFallbackPaintKit; // int32
     constexpr std::ptrdiff_t m_nFallbackStatTrak = cs2_dumper::schemas::client_dll::C_EconEntity::m_nFallbackStatTrak; // int32
@@ -40,4 +41,6 @@ namespace Offsets
     constexpr std::ptrdiff_t m_iAccountID = cs2_dumper::schemas::client_dll::C_EconItemView::m_iAccountID; // uint32
     constexpr std::ptrdiff_t m_szCustomNameOverride = cs2_dumper::schemas::client_dll::C_EconItemView::m_szCustomNameOverride; // char[161]
     constexpr std::ptrdiff_t m_iItemIDHigh = cs2_dumper::schemas::client_dll::C_EconItemView::m_iItemIDHigh; // uint32
+
+    constexpr std::ptrdiff_t m_pVdata = 0x388; // uint32
 }

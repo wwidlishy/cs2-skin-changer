@@ -3,6 +3,8 @@
 
 #include "../../../ext/wcl.h"
 
+#include "../vtable.h"
+
 #pragma once
 
 enum ItemIds
@@ -145,12 +147,84 @@ void UpdateSkin(const uintptr_t weapon)
     //mem->SwapPatch(Sigs::ForceUpdateHud, 2, 250);
 }
 
-void SetMeshMask(const uintptr_t ent, const uint64_t mask)
+//void SetMeshMask(const uintptr_t ent, const uint64_t mask)
+//{
+//    wcl->CallFunction(Sigs::SetMeshMask,
+//        {
+//            CArg{ ASM::RCX, mem->Read<uintptr_t>(ent + Offsets::m_pGameSceneNode) },
+//            CArg{ ASM::RDX, mask },
+//        });
+//}
+
+void SetMeshMask(const uintptr_t& ent, const uint64_t mask)
 {
-    wcl->CallFunction(Sigs::SetMeshMask,
+    const auto& node = mem->Read<uintptr_t>(ent + Offsets::m_pGameSceneNode);
+    const auto model = node + Offsets::m_modelState;
+    const auto dirtyAttributes = mem->Read<uintptr_t>(model + 0x108);
+
+    for (int i = 0; i < 1000; i++)
+    {
+        mem->Write<uint64_t>(model + Offsets::m_MeshGroupMask, mask);
+        mem->Write<uint64_t>(dirtyAttributes + 0x10, mask);
+    }
+}
+
+void UpdateWeapon(const uintptr_t& weapon)
+{
+    //wcl->CallFunction(mem->GetVtableFunc(mem->Read<uintptr_t>(weapon), Vtable::UpdateFallbackData),
+    wcl->CallFunction(mem->SigScan(L"client.dll", "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 8B DA 48 8B F9 E8 ? ? ? ? F6 C3 ? 0F 84 ? ? ? ? 48 8B 87"),
         {
-            CArg{ ASM::RCX, mem->Read<uintptr_t>(ent + Offsets::m_pGameSceneNode) },
-            CArg{ ASM::RDX, mask },
+            CArg{ ASM::RCX, weapon },
+            CArg{ ASM::dl, true },
+        });
+
+    //const uintptr_t& CompositeMaterial = weapon + 0x5F8;
+    //wcl->CallFunction(Sigs::UpdateComposite,
+    //    {
+    //        CArg{ ASM::RCX, CompositeMaterial },
+    //        CArg{ ASM::dl, true },
+    //    });
+
+    wcl->CallFunction(Sigs::UpdateModel,
+        {
+            CArg{ ASM::RCX, weapon },
+            //CArg{ ASM::dl, false },
+        });
+}
+
+void PostDataUpdate(const uintptr_t& weapon)
+{
+    wcl->CallFunction(mem->GetVtableFunc(mem->Read<uintptr_t>(weapon), Vtable::UpdatePostData),
+        {
+            CArg{ ASM::RCX, weapon },
+            CArg{ ASM::dl, true },
+        });
+}
+
+void SetModel(const uintptr_t& weapon, std::string model)
+{
+    const uintptr_t pModel = mem->Allocate(NULL, MemPage);
+    mem->WriteString(pModel, model);
+
+    wcl->CallFunction(Sigs::SetModel,
+        {
+            CArg{ ASM::RCX, weapon },
+            CArg{ ASM::RDX, pModel },
+        });
+
+    mem->Free(pModel, MemPage);
+}
+
+void UpdateModel(const uintptr_t& weapon)
+{
+    SetModel(weapon, "");
+}
+
+void UpdateSubclass(const uintptr_t& weapon)
+{
+    wcl->CallFunction(Sigs::SubclassUpdate,
+        {
+            CArg{ ASM::RCX, weapon },
         });
 }
 
@@ -179,4 +253,14 @@ void AddAttribute(const uintptr_t item, const std::string attribute, float value
 
     mem->Free(pAttribute, MemPage);
     mem->Free(pValue, MemPage);
+}
+
+inline uintptr_t GetVdata(const uintptr_t& pWeapon)
+{
+    return mem->Read<uintptr_t>(pWeapon + Offsets::m_pVdata);
+}
+
+inline bool IsMeleeWeapon(const uintptr_t& pWeapon)
+{
+    return mem->Read<bool>(GetVdata(pWeapon) + Offsets::m_bMeleeWeapon);
 }
