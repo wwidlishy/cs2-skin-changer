@@ -21,7 +21,8 @@ namespace Offsets
 
     constexpr std::ptrdiff_t m_bNeedToReApplyGloves = 0x18A5; // bool
     constexpr std::ptrdiff_t m_EconGloves = 0x18A8; // C_EconItemView
-    constexpr std::ptrdiff_t m_bInitialized = 0x1E8; // bool
+    constexpr std::ptrdiff_t m_bInitialized = cs2_dumper::schemas::client_dll::C_EconItemView::m_bInitialized; // bool
+    constexpr std::ptrdiff_t m_bRestoreCustomMaterialAfterPrecache = cs2_dumper::schemas::client_dll::C_EconItemView::m_bRestoreCustomMaterialAfterPrecache; // bool
 
     constexpr std::ptrdiff_t m_modelState = cs2_dumper::schemas::client_dll::CSkeletonInstance::m_modelState; // CModelState
     constexpr std::ptrdiff_t m_MeshGroupMask = cs2_dumper::schemas::client_dll::CModelState::m_MeshGroupMask; // uint64

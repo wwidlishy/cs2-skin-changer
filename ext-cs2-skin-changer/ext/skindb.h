@@ -92,28 +92,53 @@ struct SkinInfo_t {
     WeaponsEnum weaponType;
 };
 
-std::vector<SkinInfo_t> Skins;
-Knife ActiveKnife = Knife();
-
-void AddSkin(SkinInfo_t AddedSkin)
+struct Glove_t
 {
-    for (SkinInfo_t& skin : Skins)
+    uint16_t defIndex;
+    int Paint;
+};
+
+class SkinManager
+{
+public:
+    std::vector<SkinInfo_t> Skins;
+    Glove_t ActiveGloves = Glove_t();
+    Knife ActiveKnife = Knife();
+
+    void AddSkin(SkinInfo_t AddedSkin)
     {
-        if(skin.weaponType == AddedSkin.weaponType)
-			skin = AddedSkin;
+        for (SkinInfo_t& skin : Skins)
+        {
+            if (skin.weaponType == AddedSkin.weaponType)
+                skin = AddedSkin;
+        }
+
+        Skins.push_back(AddedSkin);
     }
 
-	Skins.push_back(AddedSkin);
-}
-
-SkinInfo_t GetSkin(const WeaponsEnum def)
-{
-    for (SkinInfo_t& skin : Skins)
+    SkinInfo_t GetSkin(const WeaponsEnum def)
     {
-        if (skin.weaponType == def)
-			return skin;
+        for (const SkinInfo_t& skin : Skins)
+            if (skin.weaponType == def)
+                return skin;
+        return SkinInfo_t{0, false, std::string(), WeaponsEnum::none};
     }
-}
+
+    uint16_t GetSkinIndexFromArray(std::vector<SkinInfo_t> WeaponSkins, SkinInfo_t SelectedSkin)
+    {
+        for (int i = 0; i < WeaponSkins.size(); i++)
+        {
+            if(WeaponSkins[i].Paint == SelectedSkin.Paint)
+				return i;
+        }
+
+		return 0;
+    }
+
+    void PharseJson();
+	void ExportJson();
+};
+SkinManager* skinManager = new SkinManager();
 
 class CSkinDB {
 private:
@@ -232,7 +257,7 @@ public:
                 info.weaponType = GetDefPerString(info.name);
 
                 if (skin.contains("legacy_model") && skin["legacy_model"].is_boolean()) {
-                    info.bUsesOldModel = !skin["legacy_model"].get<bool>();
+                    info.bUsesOldModel = skin["legacy_model"].get<bool>();
                 }
 
                 std::string weaponType = GetStringSafe(skin, "weapon");
@@ -273,9 +298,14 @@ public:
     {
         std::vector<SkinInfo_t> results;
 
+		results.push_back(SkinInfo_t{ 0, false, "Vanila", WeaponsEnum::none});
+
+        if(type == WeaponsEnum::none)
+            return results;
+
         for (const auto& skin : weaponSkins)
         {
-            if (type != WeaponsEnum::none && skin.weaponType != type)
+            if (skin.weaponType != type)
                 continue;
 
             results.push_back(skin);

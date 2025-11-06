@@ -113,6 +113,9 @@
     <ClInclude Include="src\SDK\MurmurHash2\MurmurHash2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\skins.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -3,36 +3,52 @@
 
 #include "window/window.hpp"
 
+static WeaponsEnum CurrentWeaponDef;
+
 static int selectedSkinIndex = 0;
 static bool bSkin = false;
 
-void RenderWeaponTab(const uintptr_t& weapon)
+void RenderWeaponTab()
 {
-	const uintptr_t item = weapon + Offsets::m_AttributeManager + Offsets::m_Item;
-	const WeaponsEnum defIndex = static_cast<WeaponsEnum>(mem->Read<uint16_t>(item + Offsets::m_iItemDefinitionIndex));
-	const std::vector<SkinInfo_t> availableSkins = skindb->GetWeaponSkins(defIndex);
+    const std::vector<SkinInfo_t> availableSkins = skindb->GetWeaponSkins(CurrentWeaponDef);
 
-	selectedSkinIndex = 0;
+    ImGui::Checkbox("Skins", &bSkin);
 
-	ImGui::Checkbox("Skins", &bSkin);
+    // Safety: ensure selectedSkinIndex is valid for this availableSkins
+    if (availableSkins.empty()) {
+        // no skins for this weapon: show an empty/placeholder preview
+        if (ImGui::BeginCombo("Select Skin", "")) {
+            ImGui::EndCombo();
+        }
+        return;
+    }
 
-	if (ImGui::BeginCombo("Select Skin", availableSkins[selectedSkinIndex].name.c_str()))
+    //if (selectedSkinIndex < 0 || selectedSkinIndex >= static_cast<int>(availableSkins.size()))
+    //    selectedSkinIndex = 0; // clamp or reset when changing weapon
+
+	selectedSkinIndex = skinManager->GetSkinIndexFromArray(availableSkins, skinManager->GetSkin(CurrentWeaponDef));
+
+    const char* preview = availableSkins[selectedSkinIndex].name.c_str();
+    if (ImGui::BeginCombo("Select Skin", preview))
+    {
+        for (int i = 0; i < static_cast<int>(availableSkins.size()); i++)
+        {
+            bool isSelected = (selectedSkinIndex == i);
+            if (ImGui::Selectable(availableSkins[i].name.c_str(), isSelected))
+                selectedSkinIndex = i;
+            if (isSelected)
+                ImGui::SetItemDefaultFocus();
+        }
+        ImGui::EndCombo();
+    }
+
+    if (selectedSkinIndex != 0) // keep existing semantic for default slot 0
+		skinManager->AddSkin(availableSkins[selectedSkinIndex]);
+
+	if (ImGui::Button("Force Update"))
 	{
-		for (int i = 0; i < availableSkins.size(); i++)
-		{
-			bool isSelected = (selectedSkinIndex == i);
-			if (ImGui::Selectable(availableSkins[i].name.c_str(), isSelected))
-				selectedSkinIndex = i;
-
-			// Set the initial focus when opening the combo (optional)
-			if (isSelected)
-				ImGui::SetItemDefaultFocus();
-		}
-		ImGui::EndCombo();
+		wcl->CallFunction(Sigs::RegenerateWeaponSkins);
 	}
-
-	if(selectedSkinIndex)
-		AddSkin(availableSkins[selectedSkinIndex]);
 }
 
 void RenderGlovesTab()
@@ -62,11 +78,11 @@ void RenderKnifeTab()
 		ImGui::EndCombo();
 	}
 
-	ActiveKnife = Knifes[selectedKnifeIndex];
+	skinManager->ActiveKnife = Knifes[selectedKnifeIndex];
 }
 
 bool MenuOpen = true;
-void RenderMenu(const uintptr_t& weapon)
+void RenderMenu()
 {
 	//if (GetAsyncKeyState(VK_INSERT) & 1)
 	//	MenuOpen = !MenuOpen;
@@ -96,8 +112,10 @@ void RenderMenu(const uintptr_t& weapon)
 		switch (active_tab)
 		{
 		case 0:
+			RenderWeaponTab();
 			break;
 		case 1:
+			RenderGlovesTab();
 			break;
 		case 2:
 			RenderKnifeTab();
@@ -107,4 +125,15 @@ void RenderMenu(const uintptr_t& weapon)
 	ImGui::EndChild();
 
 	ImGui::End();
+}
+
+void MenuThreadFunc()
+{
+	while (true)
+	{
+		Sleep(1);
+		overlay::Render();
+		RenderMenu();
+		overlay::EndRender();
+	}
 }

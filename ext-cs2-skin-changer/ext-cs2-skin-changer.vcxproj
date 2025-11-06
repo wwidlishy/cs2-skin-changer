@@ -166,6 +166,7 @@
     <ClInclude Include="src\SDK\MurmurHash2\MurmurHash2.h" />
     <ClInclude Include="src\SDK\vtable.h" />
     <ClInclude Include="src\SDK\weapon\C_EconEntity.h" />
+    <ClInclude Include="src\skins.h" />
     <ClInclude Include="src\window\window.hpp" />
   </ItemGroup>
   <ItemGroup>
