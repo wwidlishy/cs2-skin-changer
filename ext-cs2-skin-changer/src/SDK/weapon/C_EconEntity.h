@@ -1,13 +1,17 @@
 #include "../../../ext/sigs.h"
 #include "../../../ext/offsets.h"
-
 #include "../../../ext/wcl.h"
-
 #include "../vtable.h"
+
+#include "../entity/dwEntityListManager.h"
 
 #pragma once
 
 #define STRINGTOKEN_MURMURHASH_SEED 0x31415926
+
+static bool ShouldUpdateWeapon = false;
+
+static uintptr_t pUpdateHudWeaponFunc;
 
 enum ItemIds
 {
@@ -114,29 +118,6 @@ std::string WeaponIdToString(int weaponId)
     }
 }
 
-void UpdateSkin(const uintptr_t weapon)
-{
-    wcl->CallFunction(Sigs::UpdateSkin,
-        {
-            CArg{ ASM::RCX, weapon },
-            CArg{ ASM::dl, true },
-        }
-    );
-
-	Sleep(500);
-
-    wcl->CallFunction(Sigs::RegenerateWeaponSkins);
-}
-
-//void SetMeshMask(const uintptr_t ent, const uint64_t mask)
-//{
-//    wcl->CallFunction(Sigs::SetMeshMask,
-//        {
-//            CArg{ ASM::RCX, mem->Read<uintptr_t>(ent + Offsets::m_pGameSceneNode) },
-//            CArg{ ASM::RDX, mask },
-//        });
-//}
-
 void SetMeshMask(const uintptr_t& ent, const uint64_t mask)
 {
     const auto& node = mem->Read<uintptr_t>(ent + Offsets::m_pGameSceneNode);
@@ -150,6 +131,7 @@ void SetMeshMask(const uintptr_t& ent, const uint64_t mask)
     }
 }
 
+static uintptr_t oHudShow;
 void UpdateWeapon(const uintptr_t& weapon = NULL)
 {
     if (weapon)
@@ -176,15 +158,19 @@ void UpdateWeapon(const uintptr_t& weapon = NULL)
                     //CArg{ ASM::dl, false },
                 });
         }
+        const uintptr_t weaponVtable = mem->Read<uintptr_t>(weapon);
+        if (!oHudShow)
+            oHudShow = mem->GetVtableFunc(weaponVtable, HudShow);
+
+        if (!pUpdateHudWeaponFunc)
+            pUpdateHudWeaponFunc = mem->MakeFunction({ 0xB0, 0x00, 0xC3 }, client);
+        
+        mem->SwapVtableFunc(weaponVtable, HudShow, pUpdateHudWeaponFunc);
+        Sleep(200);
+        mem->SwapVtableFunc(weaponVtable, HudShow, oHudShow);
     }
 
     wcl->CallFunction(Sigs::RegenerateWeaponSkins);
-
-    static uintptr_t pHudShow = mem->GetVtableFunc(mem->Read<uintptr_t>(weapon), HudShow) + 1;
-
-    mem->Write<bool>(pHudShow, false);
-    Sleep(200);
-    mem->Write<bool>(pHudShow, true);
 }
 
 void SetModel(const uintptr_t& weapon, std::string model)
@@ -201,10 +187,10 @@ void SetModel(const uintptr_t& weapon, std::string model)
     mem->Free(pModel, MemPage);
 }
 
-void UpdateModel(const uintptr_t& weapon)
-{
-    SetModel(weapon, "");
-}
+//void UpdateModel(const uintptr_t& weapon)
+//{
+//    SetModel(weapon, "");
+//}
 
 void UpdateSubclass(const uintptr_t& weapon)
 {
@@ -225,7 +211,7 @@ namespace Attributes
 void AddAttribute(const uintptr_t item, const std::string attribute, float value)
 {
     const uintptr_t pAttribute = mem->Allocate(NULL, MemPage);
-    const uintptr_t pValue = wcl->FuncAlloc(Sigs::SetAttribute);
+    const uintptr_t pValue = mem->FuncAlloc(Sigs::SetAttribute);
     mem->WriteString(pAttribute, attribute);
     mem->Write<float>(pValue, value);
 

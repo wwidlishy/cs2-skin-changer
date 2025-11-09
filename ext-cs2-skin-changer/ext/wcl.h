@@ -76,20 +76,6 @@ public:
 class WCL
 {
 public:
-    uintptr_t FuncAlloc(const uintptr_t funcAddress)
-    {
-        uintptr_t allocAddress = NULL;
-
-        for (int i = 0; i < 100000; i++)
-        {
-            allocAddress = mem->Allocate(funcAddress - (i * MemPage), MemPage);
-            if (allocAddress)
-                break;
-        }
-
-        return allocAddress;
-    }
-
     void CallFunction(const uintptr_t FuncAddress, std::vector<CArg> args = {}, const bool BypassSafeDelay = false)
     {
         if (!FuncAddress || !mem->Read<uintptr_t>(FuncAddress))
@@ -102,7 +88,7 @@ public:
             return;
         }
 
-        const uintptr_t codeCave = FuncAlloc(FuncAddress);
+        const uintptr_t codeCave = mem->FuncAlloc(FuncAddress);
         if (!codeCave)
             return;
 
@@ -111,6 +97,14 @@ public:
 
         for (CArg& arg : args)
         {
+            if (arg.value >= 1 << 40)
+            {
+                if (!mem->Read<uintptr_t>(arg.value))
+                {
+                    mem->Free(codeCave, MemPage);
+                    return;
+                }
+            }
             arg.WriteArg(iCodeCave);
         }
 
@@ -124,6 +118,7 @@ public:
         //std::cout << std::hex << codeCave << std::endl;
         //while (!GetAsyncKeyState(VK_HOME)) { if (GetAsyncKeyState(VK_END)) { mem->Free(codeCave, MemPage); return; } }
         mem->CallThread(codeCave);
+
         mem->Free(codeCave, MemPage);
 
         if (!BypassSafeDelay)

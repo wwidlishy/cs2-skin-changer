@@ -20,8 +20,13 @@ int main()
 
         const uintptr_t localPlayer = GetLocalPlayer();
         const uintptr_t weapon = mem->Read<uintptr_t>(localPlayer + Offsets::m_pClippingWeapon);
-        if (!localPlayer || !weapon)
+        const uintptr_t item = weapon + Offsets::m_AttributeManager + Offsets::m_Item;
+        CurrentWeaponDef = static_cast<WeaponsEnum>(mem->Read<uint16_t>(item + Offsets::m_iItemDefinitionIndex));
+        if (!localPlayer || !weapon || !item || !CurrentWeaponDef)
             continue;
+
+        std::cout << std::hex << pUpdateHudWeaponFunc << std::endl;
+        //std::cout << std::hex << weapon << std::endl;
         //const uintptr_t item = GetHudArms() + Offsets::m_AttributeManager + Offsets::m_Item;
         //std::cout << std::dec << mem->Read<uint16_t>(item + Offsets::m_iItemDefinitionIndex) << std::endl;
         //mem->Write<bool>(localPlayer + Offsets::m_EconGloves + Offsets::m_bRestoreCustomMaterialAfterPrecache, true);

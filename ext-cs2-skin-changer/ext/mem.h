@@ -7,6 +7,8 @@
 #include <cstdint>
 #include <vector>
 
+#include "offsets.h"
+
 #define MemPage 0xFFF//4095 bytes
 
 class Memory {
@@ -299,6 +301,91 @@ public:
         Patch(address, bytesSize);
         Sleep(delay);
         WriteBytes(address, ogBytes);
+    }
+
+    //int GetStructSize(uintptr_t structure)
+    //{
+    //    int index;
+    //
+    //    if (!structure)
+    //        return index;
+    //
+    //    while (true)
+    //    {
+    //        if (!Read<uint8_t>(structure + index))
+    //            break;
+    //
+    //        index++;
+    //    }
+    //
+    //    return index;
+    //}
+    //
+    //std::vector<uintptr_t> GetTableAddresses(uintptr_t table)
+    //{
+    //    std::vector<uintptr_t> Addresses;
+    //
+    //    if (!table)
+    //        return Addresses;
+    //
+    //    uintptr_t AddressIndex = table;
+    //    while (true)
+    //    {
+    //        AddressIndex += sizeof(uintptr_t);
+    //
+    //        uintptr_t Address = Read<uintptr_t>(AddressIndex);
+    //        if (!Address)
+    //            break;
+    //
+    //        Addresses.push_back(Address);
+    //    }
+    //}
+    //
+    //void AddAddressToTable(uintptr_t table, uintptr_t address)
+    //{
+    //    if (!table)
+    //        return;
+    //
+    //    uintptr_t AddressIndex = table;
+    //    while (true)
+    //    {
+    //        AddressIndex += sizeof(uintptr_t);
+    //        if (!Read<uintptr_t>(AddressIndex))
+    //        {
+    //            Write<uintptr_t>(AddressIndex, address);
+    //            break;
+    //        }
+    //    }
+    //}
+
+    uintptr_t FuncAlloc(const uintptr_t funcAddress, uint64_t size = MemPage)
+    {
+        uintptr_t allocAddress = NULL;
+
+        for (int i = 0; i < 100000; i++)
+        {
+            allocAddress = Allocate(funcAddress - (i * size), size);
+            if (allocAddress)
+                break;
+        }
+        std::cout << std::hex << allocAddress << std::endl;
+        return allocAddress;
+    }
+
+    uintptr_t MakeFunction(const std::vector<uint8_t> bytes, const uintptr_t address = NULL) // todo make fully static in game memory
+    {
+        if (bytes.empty())
+            return NULL;     
+
+        uintptr_t funcAddress = FuncAlloc(address, bytes.size());
+        WriteBytes(funcAddress, bytes);
+
+        return funcAddress;
+    }
+
+    void SwapVtableFunc(const uintptr_t vtable, const uint64_t index, const uintptr_t func)
+    {
+        Write<uintptr_t>(vtable + (index * sizeof(uintptr_t)), func);
     }
 
     inline uintptr_t ResolveRelativeAddress(uintptr_t instruction, int offsetOffset = 3, int instructionSize = 7)

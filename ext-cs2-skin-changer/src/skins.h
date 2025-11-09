@@ -10,8 +10,6 @@ void OnWeapon(const uintptr_t& pWeapon)
 {
     const uintptr_t hudWeapon = GetHudWeapon(pWeapon);
     const uintptr_t item = pWeapon + Offsets::m_AttributeManager + Offsets::m_Item;
-
-    CurrentWeaponDef = static_cast<WeaponsEnum>(mem->Read<uint16_t>(item + Offsets::m_iItemDefinitionIndex));
     //SkinInfo_t activeSkin = GetActiveSkin(static_cast<WeaponsEnum>(mem->Read<uint16_t>(item + Offsets::m_iItemDefinitionIndex)));
     SkinInfo_t activeSkin = skinManager->GetSkin(CurrentWeaponDef);
     if (!activeSkin.Paint)
@@ -61,7 +59,6 @@ void OnMelee(const uintptr_t& pKnife)
 {
     const uintptr_t item = pKnife + Offsets::m_AttributeManager + Offsets::m_Item;
     std::string& model = skinManager->ActiveKnife.model;
-    CurrentWeaponDef = static_cast<WeaponsEnum>(mem->Read<uint16_t>(item + Offsets::m_iItemDefinitionIndex));
     const uint16_t definition = skinManager->ActiveKnife.defIndex;
     if (!definition)
         return;
