@@ -46,9 +46,7 @@ void RenderWeaponTab()
 		skinManager->AddSkin(availableSkins[selectedSkinIndex]);
 
 	if (ImGui::Button("Force Update"))
-	{
-		UpdateWeapon();
-	}
+		ShouldUpdateWeapon = true;
 }
 
 void RenderGlovesTab()
@@ -131,7 +129,7 @@ void MenuThreadFunc()
 {
 	while (true)
 	{
-		Sleep(1);
+		Sleep(5);
 		overlay::Render();
 		RenderMenu();
 		overlay::EndRender();

@@ -10,7 +10,6 @@ void OnWeapon(const uintptr_t& pWeapon)
 {
     const uintptr_t hudWeapon = GetHudWeapon(pWeapon);
     const uintptr_t item = pWeapon + Offsets::m_AttributeManager + Offsets::m_Item;
-    //SkinInfo_t activeSkin = GetActiveSkin(static_cast<WeaponsEnum>(mem->Read<uint16_t>(item + Offsets::m_iItemDefinitionIndex)));
     SkinInfo_t activeSkin = skinManager->GetSkin(CurrentWeaponDef);
     if (!activeSkin.Paint)
         return;
@@ -23,7 +22,7 @@ void OnWeapon(const uintptr_t& pWeapon)
         mem->Write<uint32_t>(item + Offsets::m_iItemIDHigh, ItemIds::UseFallBackValues);
         mem->Write<int32_t>(pWeapon + Offsets::m_nFallbackPaintKit, activeSkin.Paint);
 
-        UpdateWeapon(pWeapon);
+        ShouldUpdateWeapon = true;
     }
 }
 

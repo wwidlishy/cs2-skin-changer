@@ -7,6 +7,7 @@
 namespace Sigs
 {
 	const auto RegenerateWeaponSkins = mem->SigScan(L"client.dll", "48 83 EC ? E8 ? ? ? ? 48 85 C0 0F 84 ? ? ? ? 48 8B 10");
+	const auto UpdateFallbackData = mem->SigScan(L"client.dll", "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 8B DA 48 8B F9 E8 ? ? ? ? F6 C3 ? 0F 84 ? ? ? ? 48 8B 87");
 	const auto SetModel = mem->SigScan(L"client.dll", "40 53 48 83 EC 20 48 8B D9 4C 8B C2 48 8B 0D ? ? ? ? 48 8D 54 24");
 	const auto SetMeshMask = mem->SigScan(L"client.dll", "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8D 99 ? ? ? ? 48 8B 71");
 	const auto SubclassUpdate = mem->SigScan(L"client.dll", "40 53 48 83 EC 30 48 8B 41 10 48 8B D9 8B 50 30");

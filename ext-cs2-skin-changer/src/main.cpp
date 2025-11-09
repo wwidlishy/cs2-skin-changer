@@ -25,7 +25,6 @@ int main()
         if (!localPlayer || !weapon || !item || !CurrentWeaponDef)
             continue;
 
-        std::cout << std::hex << pUpdateHudWeaponFunc << std::endl;
         //std::cout << std::hex << weapon << std::endl;
         //const uintptr_t item = GetHudArms() + Offsets::m_AttributeManager + Offsets::m_Item;
         //std::cout << std::dec << mem->Read<uint16_t>(item + Offsets::m_iItemDefinitionIndex) << std::endl;
@@ -39,16 +38,14 @@ int main()
         //exit(0);
         ////continue;
 
-        if (IsMeleeWeapon(weapon))
-        {
-            if(bKnife)
-                OnMelee(weapon);
-        }
-        else
-        {
-            if(bSkin)
-                OnWeapon(weapon);
-        }
+        if (IsMeleeWeapon(weapon) && bKnife)
+            OnMelee(weapon);
+        else if(bSkin)
+            OnWeapon(weapon);
+
+        if (ShouldUpdateWeapon)
+            UpdateWeapon(weapon);
+            
     }
 
     overlay::CloseOverlay();

@@ -11,8 +11,6 @@
 
 static bool ShouldUpdateWeapon = false;
 
-static uintptr_t pUpdateHudWeaponFunc;
-
 enum ItemIds
 {
     NoSkinValues = 0,
@@ -131,46 +129,34 @@ void SetMeshMask(const uintptr_t& ent, const uint64_t mask)
     }
 }
 
-static uintptr_t oHudShow;
 void UpdateWeapon(const uintptr_t& weapon = NULL)
 {
-    if (weapon)
+    const uintptr_t weaponVtable = mem->Read<uintptr_t>(weapon);
+    if (weapon && weaponVtable)
     {
-        //wcl->CallFunction(mem->GetVtableFunc(mem->Read<uintptr_t>(weapon), Vtable::UpdateFallbackData),
-        wcl->CallFunction(mem->SigScan(L"client.dll", "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 8B DA 48 8B F9 E8 ? ? ? ? F6 C3 ? 0F 84 ? ? ? ? 48 8B 87"), //UpdateFallbackData
-            {
-                CArg{ ASM::RCX, weapon },
-                CArg{ ASM::dl, true },
-            });
+        //wcl->CallFunction(mem->GetVtableFunc(weaponVtable, Vtable::UpdateFallbackData),
+        wcl->CallFunction(Sigs::UpdateFallbackData, {{ ASM::RCX, weapon }, { ASM::dl, true }});
 
         if (!mem->Read<uint64_t>(weapon + 0xA98))
         {
             const uintptr_t& CompositeMaterial = weapon + 0x5F8;
-            wcl->CallFunction(Sigs::UpdateComposite,
-                {
-                    CArg{ ASM::RCX, CompositeMaterial },
-                    CArg{ ASM::dl, true },
-                });
-
-            wcl->CallFunction(Sigs::UpdateModel,
-                {
-                    CArg{ ASM::RCX, weapon },
-                    //CArg{ ASM::dl, false },
-                });
+            wcl->CallFunction(Sigs::UpdateComposite, {{ ASM::RCX, CompositeMaterial }, { ASM::dl, true }});
+            wcl->CallFunction(Sigs::UpdateModel, {{ ASM::RCX, weapon }});
         }
-        const uintptr_t weaponVtable = mem->Read<uintptr_t>(weapon);
-        if (!oHudShow)
-            oHudShow = mem->GetVtableFunc(weaponVtable, HudShow);
-
-        if (!pUpdateHudWeaponFunc)
-            pUpdateHudWeaponFunc = mem->MakeFunction({ 0xB0, 0x00, 0xC3 }, client);
         
+        const uintptr_t oHudShow = mem->GetVtableFunc(weaponVtable, HudShow);
+        const uintptr_t pUpdateHudWeaponFunc = mem->MakeFunction({ 0xB0, 0x00, 0xC3 }, oHudShow);
+
         mem->SwapVtableFunc(weaponVtable, HudShow, pUpdateHudWeaponFunc);
-        Sleep(200);
+        Sleep(300);
         mem->SwapVtableFunc(weaponVtable, HudShow, oHudShow);
+
+        mem->Free(pUpdateHudWeaponFunc, MemPage);
     }
 
     wcl->CallFunction(Sigs::RegenerateWeaponSkins);
+
+    ShouldUpdateWeapon = false;
 }
 
 void SetModel(const uintptr_t& weapon, std::string model)
@@ -187,10 +173,10 @@ void SetModel(const uintptr_t& weapon, std::string model)
     mem->Free(pModel, MemPage);
 }
 
-//void UpdateModel(const uintptr_t& weapon)
-//{
-//    SetModel(weapon, "");
-//}
+void UpdateModel(const uintptr_t& weapon)
+{
+    SetModel(weapon, "");
+}
 
 void UpdateSubclass(const uintptr_t& weapon)
 {

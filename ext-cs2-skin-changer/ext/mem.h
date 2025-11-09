@@ -368,7 +368,7 @@ public:
             if (allocAddress)
                 break;
         }
-        std::cout << std::hex << allocAddress << std::endl;
+        
         return allocAddress;
     }
 
@@ -377,15 +377,34 @@ public:
         if (bytes.empty())
             return NULL;     
 
-        uintptr_t funcAddress = FuncAlloc(address, bytes.size());
+        uintptr_t funcAddress = FuncAlloc(address);
         WriteBytes(funcAddress, bytes);
-
+        
         return funcAddress;
     }
 
     void SwapVtableFunc(const uintptr_t vtable, const uint64_t index, const uintptr_t func)
     {
-        Write<uintptr_t>(vtable + (index * sizeof(uintptr_t)), func);
+        const uintptr_t address = vtable + (index * sizeof(uintptr_t));
+
+        DWORD oldProtect;
+        if (!VirtualProtectEx(hProcess, (LPVOID)address, sizeof(uintptr_t),
+            PAGE_EXECUTE_READWRITE, &oldProtect)) {
+            printf("VirtualProtectEx failed: %lu\n", GetLastError());
+            return;
+        }
+
+        Write<uintptr_t>(address, func);
+
+        VirtualProtectEx(hProcess, (LPVOID)address, sizeof(uintptr_t), oldProtect, &oldProtect);
+    }
+
+    MEMORY_BASIC_INFORMATION GetMBI(const uintptr_t address)
+    {
+        MEMORY_BASIC_INFORMATION mbi;
+        VirtualQueryEx(hProcess, (LPCVOID)address, &mbi, sizeof(mbi));
+
+        return mbi;
     }
 
     inline uintptr_t ResolveRelativeAddress(uintptr_t instruction, int offsetOffset = 3, int instructionSize = 7)

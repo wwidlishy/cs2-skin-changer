@@ -76,7 +76,7 @@ public:
 class WCL
 {
 public:
-    void CallFunction(const uintptr_t FuncAddress, std::vector<CArg> args = {}, const bool BypassSafeDelay = false)
+    void CallFunction(const uintptr_t FuncAddress, std::vector<CArg> args = {}, const bool BypassSafeDelay = true)
     {
         if (!FuncAddress || !mem->Read<uintptr_t>(FuncAddress))
             return;
@@ -97,14 +97,6 @@ public:
 
         for (CArg& arg : args)
         {
-            if (arg.value >= 1 << 40)
-            {
-                if (!mem->Read<uintptr_t>(arg.value))
-                {
-                    mem->Free(codeCave, MemPage);
-                    return;
-                }
-            }
             arg.WriteArg(iCodeCave);
         }
 
