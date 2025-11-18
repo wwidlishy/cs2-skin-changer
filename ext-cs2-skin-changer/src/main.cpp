@@ -2,8 +2,31 @@
 #include "skins.h"
 #include "window/window.hpp"
 
+void dostuff()
+{
+    const uintptr_t localPlayer = GetLocalPlayer();
+    const uintptr_t CGameEntitySystem = mem->Read<uintptr_t>(client + Offsets::dwGameEntitySystem);
+
+    while (true)
+    {
+        const uintptr_t weapon = mem->Read<uintptr_t>(localPlayer + Offsets::m_pClippingWeapon);
+        const uintptr_t item = weapon + Offsets::m_AttributeManager + Offsets::m_Item;
+
+		std::cout << IsAttributeUpdated(item, AttributeDefinitionIndex::Paint, (float)mem->Read<uint32_t>(weapon + Offsets::m_nFallbackPaintKit)) << std::endl;
+		//std::cout << std::hex << weapon << std::endl;
+        const uint32_t clientWeaponIndex = GetClientEntIndex(CGameEntitySystem, weapon);
+        if (!clientWeaponIndex || clientWeaponIndex == 1)
+            continue;
+		//std::cout << std::dec << GetClientEnt(CGameEntitySystem, clientWeaponIndex).pad_000C << std::endl;
+        SetPostDataUpdateId(CGameEntitySystem, clientWeaponIndex, PostDataUpdateIds::Update);
+    }
+}
+
 int main()
 {
+    std::thread dst(dostuff);
+    dst.detach();
+
     skindb->Dump();
 
     overlay::Setup();
@@ -26,19 +49,9 @@ int main()
             continue;
 
         //std::cout << std::hex << weapon << std::endl;
-        //std::cout << std::hex << localPlayer << std::endl;
-        //std::cout << std::dec << GetEntityHandle(weapon) << std::endl;
-        //const uintptr_t item = GetHudArms() + Offsets::m_AttributeManager + Offsets::m_Item;
-        //std::cout << std::dec << mem->Read<uint16_t>(item + Offsets::m_iItemDefinitionIndex) << std::endl;
-        //mem->Write<bool>(localPlayer + Offsets::m_EconGloves + Offsets::m_bRestoreCustomMaterialAfterPrecache, true);
-        ////continue;
-        //exit(0);
+        //std::cout << std::hex << localPlayer + Offsets::m_EconGloves << std::endl;
 		////OnAgent(localPlayer);
-        ////exit(0);
 		//OnGloves(localPlayer + Offsets::m_EconGloves);
-		////OnGloves(localPlayer);
-        //exit(0);
-        ////continue;
 
         if (IsMeleeWeapon(weapon) && bKnife)
             OnMelee(weapon);

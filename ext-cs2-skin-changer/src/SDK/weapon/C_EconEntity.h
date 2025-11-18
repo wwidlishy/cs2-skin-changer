@@ -4,6 +4,7 @@
 #include "../vtable.h"
 
 #include "../entity/dwEntityListManager.h"
+#include "CAttributeList.h"
 
 #include <thread>
 
@@ -155,21 +156,32 @@ inline void UpdateHud(const uintptr_t weaponVtable) { std::thread updateHudThrea
 
 void UpdateWeapon(const uintptr_t& weapon = NULL)
 {
-    const uintptr_t weaponVtable = mem->Read<uintptr_t>(weapon);
-    if (weapon && weaponVtable)
-    {
-        //wcl->CallFunction(mem->GetVtableFunc(weaponVtable, Vtable::UpdateFallbackData),
-        wcl->CallFunction(Sigs::UpdateFallbackData, {{ ASM::RCX, weapon }, { ASM::dl, true }});
+    //const uintptr_t weaponVtable = mem->Read<uintptr_t>(weapon);
+    //if (weapon && weaponVtable)
+    //{
+    //    //wcl->CallFunction(mem->GetVtableFunc(weaponVtable, Vtable::UpdateFallbackData),
+    //    wcl->CallFunction(Sigs::UpdateFallbackData, {{ ASM::RCX, weapon }, { ASM::dl, true }});
+    //
+    //    if (!mem->Read<uint64_t>(weapon + 0xA98))
+    //    {
+    //        const uintptr_t& CompositeMaterial = weapon + 0x5F8;
+    //        wcl->CallFunction(Sigs::UpdateComposite, {{ ASM::RCX, CompositeMaterial }, { ASM::dl, true }});
+    //        wcl->CallFunction(Sigs::UpdateModel, {{ ASM::RCX, weapon }});
+    //    }
+    //    
+    //    UpdateHud(weaponVtable);
+    //}
 
-        if (!mem->Read<uint64_t>(weapon + 0xA98))
-        {
-            const uintptr_t& CompositeMaterial = weapon + 0x5F8;
-            wcl->CallFunction(Sigs::UpdateComposite, {{ ASM::RCX, CompositeMaterial }, { ASM::dl, true }});
-            wcl->CallFunction(Sigs::UpdateModel, {{ ASM::RCX, weapon }});
-        }
-        
-        UpdateHud(weaponVtable);
+    const uintptr_t CGameEntitySystem = mem->Read<uintptr_t>(client + Offsets::dwGameEntitySystem);
+
+    for (size_t i = 0; i < 200; i++)
+    {
+        const uint32_t clientWeaponIndex = GetClientEntIndex(CGameEntitySystem, weapon);
+        if(!clientWeaponIndex || clientWeaponIndex == 1)
+			continue;
+        SetPostDataUpdateId(CGameEntitySystem, 0, PostDataUpdateIds::Update);
     }
+	
 
     wcl->CallFunction(Sigs::RegenerateWeaponSkins);
 

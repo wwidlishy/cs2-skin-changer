@@ -6,6 +6,7 @@
 namespace Offsets
 {
     constexpr std::ptrdiff_t dwEntityList = cs2_dumper::offsets::client_dll::dwEntityList;
+    constexpr std::ptrdiff_t dwGameEntitySystem = cs2_dumper::offsets::client_dll::dwGameEntitySystem;
     constexpr std::ptrdiff_t dwGameEntitySystem_highestEntityIndex = cs2_dumper::offsets::client_dll::dwGameEntitySystem_highestEntityIndex;
     constexpr std::ptrdiff_t dwLocalPlayerPawn = cs2_dumper::offsets::client_dll::dwLocalPlayerPawn;
 
@@ -38,13 +39,16 @@ namespace Offsets
     constexpr std::ptrdiff_t m_AttributeManager = cs2_dumper::schemas::client_dll::C_EconEntity::m_AttributeManager; // C_AttributeContainer
     constexpr std::ptrdiff_t m_Item = cs2_dumper::schemas::client_dll::C_AttributeContainer::m_Item; // C_EconItemView
 
-    constexpr std::ptrdiff_t m_AttributeList = 0x210; // CAttributeList
+    constexpr std::ptrdiff_t m_AttributeList = cs2_dumper::schemas::client_dll::C_EconItemView::m_AttributeList; // CAttributeList
+    constexpr std::ptrdiff_t m_Attributes = cs2_dumper::schemas::client_dll::CAttributeList::m_Attributes; // C_UtlVectorEmbeddedNetworkVar<CEconItemAttribute>
     constexpr std::ptrdiff_t m_iItemDefinitionIndex = cs2_dumper::schemas::client_dll::C_EconItemView::m_iItemDefinitionIndex; // uint16
     constexpr std::ptrdiff_t m_iAccountID = cs2_dumper::schemas::client_dll::C_EconItemView::m_iAccountID; // uint32
     constexpr std::ptrdiff_t m_szCustomNameOverride = cs2_dumper::schemas::client_dll::C_EconItemView::m_szCustomNameOverride; // char[161]
     constexpr std::ptrdiff_t m_iItemIDHigh = cs2_dumper::schemas::client_dll::C_EconItemView::m_iItemIDHigh; // uint32
 
-    constexpr std::ptrdiff_t m_pVdata = 0x388; // uint32
-    constexpr std::ptrdiff_t m_pDrityModelData = 0x108; // uint32
-    constexpr std::ptrdiff_t m_DrityMeshGroupMask = 0x10; // uint32
+    constexpr std::ptrdiff_t m_pVdata = 0x388;
+    constexpr std::ptrdiff_t m_pDrityModelData = 0x108;
+    constexpr std::ptrdiff_t m_DrityMeshGroupMask = 0x10;
+    constexpr std::ptrdiff_t m_uClientEntCount = 0xC28;
+    constexpr std::ptrdiff_t m_pClientEntList = 0xC30;
 }

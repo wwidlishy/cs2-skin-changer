@@ -11,6 +11,8 @@
 
 #define MemPage 0xFFF//4095 bytes
 
+#pragma once
+
 class Memory {
 private:
 public:
