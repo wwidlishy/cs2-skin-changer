@@ -1,12 +1,9 @@
 #include "../../../ext/sigs.h"
 #include "../../../ext/offsets.h"
 #include "../../../ext/wcl.h"
-#include "../vtable.h"
 
 #include "../entity/dwEntityListManager.h"
-#include "CAttributeList.h"
-
-#include <thread>
+#include "CHudWeapon.h"
 
 #pragma once
 
@@ -132,30 +129,10 @@ void SetMeshMask(const uintptr_t& ent, const uint64_t mask)
     }
 }
 
-static bool HudUpdating = false;
-void UpdateHudThread(const uintptr_t weaponVtable)
-{
-    if (!weaponVtable || HudUpdating)
-		return;
-
-    HudUpdating = true;
-
-    const uintptr_t oHudShow = mem->GetVtableFunc(weaponVtable, HudShow);
-    const uintptr_t pUpdateHudWeaponFunc = mem->MakeFunction({ 0xB0, 0x00, 0xC3 }, oHudShow);
-
-    mem->SwapVtableFunc(weaponVtable, HudShow, pUpdateHudWeaponFunc);
-    Sleep(300);
-    mem->SwapVtableFunc(weaponVtable, HudShow, oHudShow);
-
-    mem->Free(pUpdateHudWeaponFunc, MemPage);
-
-    HudUpdating = false;
-}
-
-inline void UpdateHud(const uintptr_t weaponVtable) { std::thread updateHudThread(UpdateHudThread, weaponVtable); updateHudThread.detach();};
-
 void UpdateWeapon(const uintptr_t& weapon = NULL)
 {
+    UpdateHudWeapon(weapon);
+
     //const uintptr_t weaponVtable = mem->Read<uintptr_t>(weapon);
     //if (weapon && weaponVtable)
     //{
@@ -182,7 +159,6 @@ void UpdateWeapon(const uintptr_t& weapon = NULL)
         SetPostDataUpdateId(CGameEntitySystem, 0, PostDataUpdateIds::Update);
     }
 	
-
     wcl->CallFunction(Sigs::RegenerateWeaponSkins);
 
     ShouldUpdateWeapon = false;

@@ -17,4 +17,5 @@ namespace Sigs
 	const auto UpdateComposite2 = mem->SigScan(L"client.dll", "48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 41 56 41 57 48 83 EC ? 44 0F B6 F2");
 	const auto Regen = mem->SigScan(L"client.dll", "B2 ? E8 ? ? ? ? 33 D2 48 8B CB");
 	const auto UpdateSkin = mem->SigScan(L"client.dll", "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 8B DA 48 8B F9 E8 ? ? ? ? 48 8D 8F ? ? ? ? 48 8B D7 E8 ? ? ? ? 48 8B CF E8 ? ? ? ? 48 8B F0 F6 C3 ? 74 ? 33 D2 48 8B CF E8 ? ? ? ? 48 8D 8F ? ? ? ? 48 8B D7 E8 ? ? ? ? 45 33 C0 BA ? ? ? ? 48 8B CF E8 ? ? ? ? 48 85 F6 74 ? 48 8B 06 48 8B CE FF 90 ? ? ? ? 84 C0 75 ? 48 8B CF E8 ? ? ? ? 48 8B 5C 24 ? 48 8B 74 24 ? 48 83 C4 ? 5F C3 CC CC 48 85 D2");
+	const auto pUpdateWeaponList = mem->SigScan(L"client.dll", "4C 8B 05 ? ? ? ? 33 ED 0F B6 F8");
 }

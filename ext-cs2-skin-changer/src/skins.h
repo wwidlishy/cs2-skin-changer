@@ -1,9 +1,7 @@
 #include "../ext/offsets.h"
 #include "../ext/sigs.h"
-
-#include "SDK/entity/dwEntityListManager.h"
 #include "SDK/entity/C_CS2HudModelArms.h"
-
+#include "SDK/entity/CWeaponServices.h"
 #include "SDK/MurmurHash2/MurmurHash2.h"
 
 void OnWeapon(const uintptr_t& pWeapon)
@@ -49,9 +47,9 @@ void OnGloves(const uintptr_t& pGloves)
     
     exit(0);
 
-    std::cout << mem->Read<uint64_t>(mem->Read<uintptr_t>(GetHudArms() + Offsets::m_pGameSceneNode) + Offsets::m_modelState + Offsets::m_MeshGroupMask) << std::endl;
-    std::cout << mem->Read<uint64_t>(mem->Read<uintptr_t>(mem->Read<uintptr_t>(GetHudArms() + Offsets::m_pGameSceneNode) + Offsets::m_modelState + 0x108) + 0x10) << std::endl;
-    std::cout << std::hex << mem->Read<uintptr_t>(GetHudArms() + Offsets::m_pGameSceneNode) + Offsets::m_modelState + Offsets::m_MeshGroupMask << std::endl;
+    //std::cout << mem->Read<uint64_t>(mem->Read<uintptr_t>(GetHudArms() + Offsets::m_pGameSceneNode) + Offsets::m_modelState + Offsets::m_MeshGroupMask) << std::endl;
+    //std::cout << mem->Read<uint64_t>(mem->Read<uintptr_t>(mem->Read<uintptr_t>(GetHudArms() + Offsets::m_pGameSceneNode) + Offsets::m_modelState + 0x108) + 0x10) << std::endl;
+    //std::cout << std::hex << mem->Read<uintptr_t>(GetHudArms() + Offsets::m_pGameSceneNode) + Offsets::m_modelState + Offsets::m_MeshGroupMask << std::endl;
 }
 
 void OnMelee(const uintptr_t& pKnife)
@@ -108,10 +106,10 @@ void OnMelee(const uintptr_t& pKnife)
 void OnAgent(const uintptr_t& pPawn)
 {
     std::cout << std::hex << mem->Read<uint64_t>(pPawn + Offsets::m_nSubclassID) << std::endl;
-    std::cout << std::hex << mem->Read<uint64_t>(GetHudArms() + Offsets::m_nSubclassID) << std::endl;
+    //std::cout << std::hex << mem->Read<uint64_t>(GetHudArms() + Offsets::m_nSubclassID) << std::endl;
 
     return;
-    SetModel(GetHudArms(), "phase2/characters/models/ctm_fbi/ctm_fbi_varianta_ag2.vmdl"); //works
+    //SetModel(GetHudArms(), "phase2/characters/models/ctm_fbi/ctm_fbi_varianta_ag2.vmdl"); //works
 
     Sleep(50);
 

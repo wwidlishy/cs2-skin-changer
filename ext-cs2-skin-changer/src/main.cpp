@@ -12,7 +12,7 @@ void dostuff()
         const uintptr_t weapon = mem->Read<uintptr_t>(localPlayer + Offsets::m_pClippingWeapon);
         const uintptr_t item = weapon + Offsets::m_AttributeManager + Offsets::m_Item;
 
-		std::cout << IsAttributeUpdated(item, AttributeDefinitionIndex::Paint, (float)mem->Read<uint32_t>(weapon + Offsets::m_nFallbackPaintKit)) << std::endl;
+		//std::cout << IsAttributeUpdated(item, AttributeDefinitionIndex::Paint, (float)mem->Read<uint32_t>(weapon + Offsets::m_nFallbackPaintKit)) << std::endl;
 		//std::cout << std::hex << weapon << std::endl;
         const uint32_t clientWeaponIndex = GetClientEntIndex(CGameEntitySystem, weapon);
         if (!clientWeaponIndex || clientWeaponIndex == 1)
@@ -25,14 +25,14 @@ void dostuff()
 int main()
 {
     std::thread dst(dostuff);
-    dst.detach();
+    //dst.detach();
 
     skindb->Dump();
 
     overlay::Setup();
 
-    std::thread MenuThread(MenuThreadFunc);
-	MenuThread.detach();
+    //std::thread MenuThread(MenuThreadFunc);
+	//MenuThread.detach();
 
 	std::cout << "Discord Overlay Hooked!" << std::endl;
 	std::cout << "CS2 Skin Changer Loaded!" << std::endl;
@@ -42,13 +42,28 @@ int main()
 		Sleep(1);
 
         const uintptr_t localPlayer = GetLocalPlayer();
-        const uintptr_t weapon = mem->Read<uintptr_t>(localPlayer + Offsets::m_pClippingWeapon);
+
+        while(true)
+        { 
+            if (GetAsyncKeyState(VK_HOME))
+            {
+                for (const auto w : GetWeapons(localPlayer))
+                    UpdateHudWeapon(w);
+
+                Sleep(500);
+            }
+        }
+        return 0;
+
+        //const uintptr_t weapon = mem->Read<uintptr_t>(localPlayer + Offsets::m_pClippingWeapon);
+        const uintptr_t weapon = GetActiveWeapon(localPlayer);
         const uintptr_t item = weapon + Offsets::m_AttributeManager + Offsets::m_Item;
         CurrentWeaponDef = static_cast<WeaponsEnum>(mem->Read<uint16_t>(item + Offsets::m_iItemDefinitionIndex));
         if (!localPlayer || !weapon || !item || !CurrentWeaponDef)
             continue;
 
-        //std::cout << std::hex << weapon << std::endl;
+       std::cout << std::hex << weapon << std::endl;
+        //std::cout << std::hex << mem->Read<uintptr_t>(localPlayer + Offsets::m_pWeaponServices) << std::endl;
         //std::cout << std::hex << localPlayer + Offsets::m_EconGloves << std::endl;
 		////OnAgent(localPlayer);
 		//OnGloves(localPlayer + Offsets::m_EconGloves);

@@ -3,25 +3,30 @@
 
 #pragma once
 
-uintptr_t GetHudArms()
-{
-    return GetEntityByHandle(mem->Read<uint32_t>(GetLocalPlayer() + Offsets::m_hHudModelArms));
-}
+//uintptr_t GetHudArms()
+//{
+//    return GetEntityByHandle(mem->Read<uint32_t>(GetLocalPlayer() + Offsets::m_hHudModelArms));
+//}
+//
+//uintptr_t GetHudWeapon(const uintptr_t& weapon)
+//{
+//    const auto& armsBase = GetHudArms();
+//    const auto& armsNode = mem->Read<uintptr_t>(armsBase + Offsets::m_pGameSceneNode);
+//    for (uintptr_t viewModel = mem->Read<uintptr_t>(armsNode + Offsets::m_pChild); viewModel; viewModel = mem->Read<uintptr_t>(viewModel + Offsets::m_pNextSibling))
+//    {
+//        if (!viewModel || !mem->Read<uintptr_t>(viewModel + Offsets::m_pOwner))
+//            continue;
+//
+//        if (GetEntityByHandle(mem->Read<uint32_t>(mem->Read<uintptr_t>(viewModel + Offsets::m_pOwner) + Offsets::m_hOwnerEntity)) != weapon)
+//            continue;
+//
+//        return mem->Read<uintptr_t>(viewModel + Offsets::m_pOwner);
+//    }
+//
+//    return NULL;
+//}
 
 uintptr_t GetHudWeapon(const uintptr_t& weapon)
 {
-    const auto& armsBase = GetHudArms();
-    const auto& armsNode = mem->Read<uintptr_t>(armsBase + Offsets::m_pGameSceneNode);
-    for (uintptr_t viewModel = mem->Read<uintptr_t>(armsNode + Offsets::m_pChild); viewModel; viewModel = mem->Read<uintptr_t>(viewModel + Offsets::m_pNextSibling))
-    {
-        if (!viewModel || !mem->Read<uintptr_t>(viewModel + Offsets::m_pOwner))
-            continue;
-
-        if (GetEntityByHandle(mem->Read<uint32_t>(mem->Read<uintptr_t>(viewModel + Offsets::m_pOwner) + Offsets::m_hOwnerEntity)) != weapon)
-            continue;
-
-        return mem->Read<uintptr_t>(viewModel + Offsets::m_pOwner);
-    }
-
-    return NULL;
+	return GetEntityByHandle(mem->Read<uint16_t>(weapon + Offsets::m_hViewModelWeapon));
 }

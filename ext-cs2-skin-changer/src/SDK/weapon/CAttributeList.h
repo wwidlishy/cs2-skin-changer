@@ -17,11 +17,11 @@
 //	char pad_0041[7]; //0x0041
 //}; //Size: 0x0048
 
-enum AttributeDefinitionIndex
+enum AttributeDefinitionIndex : uint16_t
 {
 	Paint = 6,
 	Pattern = 7,
-	Wear = 7,
+	Wear = 8,
 	StatTrack = 80,
 	NameTag = 81,//not sure how to use this one
 };
@@ -32,7 +32,7 @@ public:
 	const uintptr_t vtable; //0x0000
 	const uintptr_t pOwner; //0x0008
 	const char pad_0010[32]; //0x0010
-	const uint16_t attributeDefinitionIndex; //0x0030
+	const AttributeDefinitionIndex attributeDefinitionIndex; //0x0030
 	const char pad_0032[2]; //0x0032
 	const float value; //0x0034
 	const float initValue; //0x0038
@@ -81,4 +81,31 @@ bool IsAttributeUpdated(const uintptr_t pItem, const AttributeDefinitionIndex at
 	}
 
 	return false;
+}
+
+bool AreWeaponFallbackValuesUpdated(const uintptr_t& weapon)
+{
+	const uintptr_t item = weapon + Offsets::m_AttributeManager + Offsets::m_Item;
+	std::vector<CEconItemAttribute> attributes = GetAttributes(item);
+
+	for (const CEconItemAttribute attribute : attributes)
+	{
+		switch (attribute.attributeDefinitionIndex)
+		{
+		case AttributeDefinitionIndex::Paint:
+			if (attribute.value != (float)mem->Read<uint32_t>(weapon + Offsets::m_nFallbackPaintKit))
+				return false;
+		case AttributeDefinitionIndex::Pattern:
+			if (attribute.value != (float)mem->Read<uint32_t>(weapon + Offsets::m_nFallbackSeed))
+				return false;
+		case AttributeDefinitionIndex::Wear:
+			if (attribute.value != mem->Read<float>(weapon + Offsets::m_flFallbackWear))
+				return false;
+		case AttributeDefinitionIndex::StatTrack:
+			if (attribute.value != (float)mem->Read<uint32_t>(weapon + Offsets::m_nFallbackStatTrak))
+				return false;
+		}
+	}
+
+	return true;
 }

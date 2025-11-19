@@ -119,6 +119,12 @@
     <ClInclude Include="src\SDK\weapon\CAttributeList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\SDK\weapon\CHudWeapon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SDK\entity\CWeaponServices.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
