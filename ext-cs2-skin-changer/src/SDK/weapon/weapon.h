@@ -65,21 +65,23 @@ enum WeaponsEnum
     Galil = 13,
     Mp5SD = 23
 };
-enum CSWeaponType : uint8_t
+enum class CSWeaponType : uint32_t
 {
-    WEAPONTYPE_KNIFE = 0,
-    WEAPONTYPE_PISTOL = 1,
-    WEAPONTYPE_SUBMACHINEGUN = 2,
-    WEAPONTYPE_RIFLE = 3,
-    WEAPONTYPE_SHOTGUN = 4,
-    WEAPONTYPE_SNIPER_RIFLE = 5,
-    WEAPONTYPE_MACHINEGUN = 6,
-    WEAPONTYPE_C4 = 7,
-    WEAPONTYPE_EQUIPMENT = 8,//zeus
-    WEAPONTYPE_GRENADE = 9,
-    WEAPONTYPE_FISTS = 10,
-    WEAPONTYPE_UNKNOWN = 255,
+    WEAPONTYPE_KNIFE = 0x0,
+    WEAPONTYPE_PISTOL = 0x1,
+    WEAPONTYPE_SUBMACHINEGUN = 0x2,
+    WEAPONTYPE_RIFLE = 0x3,
+    WEAPONTYPE_SHOTGUN = 0x4,
+    WEAPONTYPE_SNIPER_RIFLE = 0x5,
+    WEAPONTYPE_MACHINEGUN = 0x6,
+    WEAPONTYPE_C4 = 0x7,
+    WEAPONTYPE_TASER = 0x8,
+    WEAPONTYPE_GRENADE = 0x9,
+    WEAPONTYPE_EQUIPMENT = 0xA,
+    WEAPONTYPE_STACKABLEITEM = 0xB,
+    WEAPONTYPE_UNKNOWN = 0xC
 };
+//server.dll ^^^
 CSWeaponType WeaponEnumToType(WeaponsEnum weapon)
 {
     switch (weapon)
@@ -87,7 +89,7 @@ CSWeaponType WeaponEnumToType(WeaponsEnum weapon)
         // --- KNIVES ---
     case CtKnife:
     case Tknife:
-        return WEAPONTYPE_KNIFE;
+        return CSWeaponType::WEAPONTYPE_KNIFE;
 
         // --- PISTOLS ---
     case Deagle:
@@ -100,7 +102,7 @@ CSWeaponType WeaponEnumToType(WeaponsEnum weapon)
     case UspS:
     case Cz65A:
     case Revolver:
-        return WEAPONTYPE_PISTOL;
+        return CSWeaponType::WEAPONTYPE_PISTOL;
 
         // --- SMGS ---
     case Mac10:
@@ -110,7 +112,7 @@ CSWeaponType WeaponEnumToType(WeaponsEnum weapon)
     case Bizon:
     case Ump45:
     case Mp5SD:
-        return WEAPONTYPE_SUBMACHINEGUN;
+        return CSWeaponType::WEAPONTYPE_SUBMACHINEGUN;
 
         // --- RIFLES ---
     case Ak47:
@@ -120,26 +122,26 @@ CSWeaponType WeaponEnumToType(WeaponsEnum weapon)
     case Sg556:
     case M4A4:
     case M4A1Silencer:
-        return WEAPONTYPE_RIFLE;
+        return CSWeaponType::WEAPONTYPE_RIFLE;
 
         // --- SNIPERS ---
     case Awp:
     case Ssg08:
     case Scar20:
     case G3Sg1:
-        return WEAPONTYPE_SNIPER_RIFLE;
+        return CSWeaponType::WEAPONTYPE_SNIPER_RIFLE;
 
         // --- SHOTGUNS ---
     case Nova:
     case Xm1014:
     case Mag7:
     case Sawedoof:
-        return WEAPONTYPE_SHOTGUN;
+        return CSWeaponType::WEAPONTYPE_SHOTGUN;
 
         // --- MACHINEGUNS ---
     case M249:
     case Negev:
-        return WEAPONTYPE_MACHINEGUN;
+        return CSWeaponType::WEAPONTYPE_MACHINEGUN;
 
         // --- GRENADES ---
     case FlashBang:
@@ -148,20 +150,20 @@ CSWeaponType WeaponEnumToType(WeaponsEnum weapon)
     case Molotov:
     case IncGrenade:
     case Decoy:
-        return WEAPONTYPE_GRENADE;
+        return CSWeaponType::WEAPONTYPE_GRENADE;
 
         // --- C4 ---
     case C4:
-        return WEAPONTYPE_C4;
+        return CSWeaponType::WEAPONTYPE_C4;
 
         // --- ZEUS (equipment) ---
     case Zeus:
-        return WEAPONTYPE_EQUIPMENT;
+        return CSWeaponType::WEAPONTYPE_TASER;
 
         // --- NONE / default ---
     case none:
     default:
-        return WEAPONTYPE_UNKNOWN; // or UNKNOWN if you add one later
+        return CSWeaponType::WEAPONTYPE_UNKNOWN; // or UNKNOWN if you add one later
     }
 }
 std::string WeaponIdToString(int weaponId)

@@ -31,6 +31,7 @@ namespace Offsets
     constexpr std::ptrdiff_t m_EconGloves = cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_EconGloves; // C_EconItemView
     constexpr std::ptrdiff_t m_bInitialized = cs2_dumper::schemas::client_dll::C_EconItemView::m_bInitialized; // bool
     constexpr std::ptrdiff_t m_bRestoreCustomMaterialAfterPrecache = cs2_dumper::schemas::client_dll::C_EconItemView::m_bRestoreCustomMaterialAfterPrecache; // bool
+    constexpr std::ptrdiff_t m_iEntityQuality = cs2_dumper::schemas::client_dll::C_EconItemView::m_iEntityQuality; // int32
 
     constexpr std::ptrdiff_t m_modelState = cs2_dumper::schemas::client_dll::CSkeletonInstance::m_modelState; // CModelState
     constexpr std::ptrdiff_t m_MeshGroupMask = cs2_dumper::schemas::client_dll::CModelState::m_MeshGroupMask; // uint64
@@ -49,14 +50,16 @@ namespace Offsets
     constexpr std::ptrdiff_t m_Item = cs2_dumper::schemas::client_dll::C_AttributeContainer::m_Item; // C_EconItemView
 
     constexpr std::ptrdiff_t m_AttributeList = cs2_dumper::schemas::client_dll::C_EconItemView::m_AttributeList; // CAttributeList
+    constexpr std::ptrdiff_t m_NetworkedDynamicAttributes = cs2_dumper::schemas::client_dll::C_EconItemView::m_NetworkedDynamicAttributes; // CAttributeList
     constexpr std::ptrdiff_t m_Attributes = cs2_dumper::schemas::client_dll::CAttributeList::m_Attributes; // C_UtlVectorEmbeddedNetworkVar<CEconItemAttribute>
     constexpr std::ptrdiff_t m_iItemDefinitionIndex = cs2_dumper::schemas::client_dll::C_EconItemView::m_iItemDefinitionIndex; // uint16
     constexpr std::ptrdiff_t m_iAccountID = cs2_dumper::schemas::client_dll::C_EconItemView::m_iAccountID; // uint32
     constexpr std::ptrdiff_t m_szCustomNameOverride = cs2_dumper::schemas::client_dll::C_EconItemView::m_szCustomNameOverride; // char[161]
     constexpr std::ptrdiff_t m_iItemIDHigh = cs2_dumper::schemas::client_dll::C_EconItemView::m_iItemIDHigh; // uint32
 
+    constexpr std::ptrdiff_t m_pMemBlock = 0x200;
     constexpr std::ptrdiff_t m_pVdata = 0x388;
-    constexpr std::ptrdiff_t m_pDrityModelData = 0x108;
+    constexpr std::ptrdiff_t m_pDirtyModelData = 0x108;
     constexpr std::ptrdiff_t m_DrityMeshGroupMask = 0x10;
     constexpr std::ptrdiff_t m_uClientEntCount = 0xC28;
     constexpr std::ptrdiff_t m_pClientEntList = 0xC30;

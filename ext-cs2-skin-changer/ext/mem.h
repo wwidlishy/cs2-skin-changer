@@ -452,4 +452,5 @@ public:
         }
     }
 };
-Memory* mem = new Memory();
+//Memory* mem = new Memory();
+Memory mem;

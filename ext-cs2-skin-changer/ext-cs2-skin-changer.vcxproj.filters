@@ -39,14 +39,8 @@
     <ClCompile Include="ext\ImGui 1.90\imgui_widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\SDK\MurmurHash2\MurmurHash2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ext\mem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ext\skindb.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -86,9 +80,6 @@
     <ClInclude Include="src\SDK\weapon\C_EconEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ext\sigs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\SDK\entity\dwEntityListManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -104,28 +95,19 @@
     <ClInclude Include="ext\a2x\offsets.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ext\wcl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SDK\vtable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SDK\MurmurHash2\MurmurHash2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\skins.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SDK\weapon\CAttributeList.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SDK\weapon\CHudWeapon.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\SDK\entity\CWeaponServices.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\SDK\weapon\weapon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ext\mem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SDK\CMemStealer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SDK\CEconItemAttributeManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
