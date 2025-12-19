@@ -7,12 +7,14 @@ int main()
 {
     mem.Write<uint16_t>(Sigs::RegenerateWeaponSkins + 0x52, Offsets::m_AttributeManager + Offsets::m_Item + Offsets::m_AttributeList + Offsets::m_Attributes);
 
-    const uintptr_t localPlayer = GetLocalPlayer();
-    const uintptr_t pWeaponServices = mem.Read<uintptr_t>(localPlayer + Offsets::m_pWeaponServices);
+    
     
     while (true)
     {
         Sleep(5);
+
+        const uintptr_t localPlayer = GetLocalPlayer();
+        const uintptr_t pWeaponServices = mem.Read<uintptr_t>(localPlayer + Offsets::m_pWeaponServices);
 
         bool ShouldUpdate = false;
 
