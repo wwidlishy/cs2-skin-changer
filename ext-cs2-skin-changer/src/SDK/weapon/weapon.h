@@ -2,6 +2,7 @@
 
 #pragma once
 
+#define HideHudFlag 128
 #define STRINGTOKEN_MURMURHASH_SEED 0x31415926
 #define ForcePaintKitRegen CSWeaponType::WEAPONTYPE_UNKNOWN
 enum PostDataUpdateIds
@@ -11,13 +12,12 @@ enum PostDataUpdateIds
     Setup = 2,
     Idle = 4,
 };
-
 enum ItemIds
 {
     NoSkinValues = 0,
     UseFallBackValues = -1,
 };
-enum WeaponsEnum
+enum WeaponsEnum : uint16_t
 {
     none = 0,
     Deagle = 1,

@@ -8,7 +8,7 @@ uintptr_t GetHudArms()
     return GetEntityByHandle(mem.Read<uint32_t>(GetLocalPlayer() + Offsets::m_hHudModelArms));
 }
 
-uintptr_t GetHudWeapon(const uintptr_t& weapon)
+uintptr_t GetHudWeapon(const uintptr_t weapon)
 {
     const auto& armsBase = GetHudArms();
     const auto& armsNode = mem.Read<uintptr_t>(armsBase + Offsets::m_pGameSceneNode);
@@ -23,7 +23,7 @@ uintptr_t GetHudWeapon(const uintptr_t& weapon)
         return mem.Read<uintptr_t>(viewModel + Offsets::m_pOwner);
     }
 
-    return NULL;
+    return GetHudWeapon(weapon);
 }
 
 //uintptr_t GetHudWeapon(const uintptr_t& weapon)

@@ -104,10 +104,10 @@
     <ClInclude Include="ext\mem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\SDK\CMemStealer.h">
+    <ClInclude Include="src\SDK\CEconItemAttributeManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\SDK\CEconItemAttributeManager.h">
+    <ClInclude Include="ext\sigs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

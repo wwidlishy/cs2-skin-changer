@@ -415,7 +415,7 @@ public:
         return instruction + instructionSize + relativeOffset;
     }
 
-    uintptr_t Allocate(uintptr_t address = NULL, size_t size = NULL, DWORD protection = PAGE_EXECUTE_READWRITE) const {
+    uintptr_t Allocate(uintptr_t address = NULL, size_t size = MemPage, DWORD protection = PAGE_EXECUTE_READWRITE) const {
         LPVOID addr = VirtualAllocEx(
             hProcess,            
             reinterpret_cast<LPVOID>(address),
@@ -427,7 +427,7 @@ public:
         return reinterpret_cast<uintptr_t>(addr);
     }
 
-    bool Free(uintptr_t address, size_t size = 0) const
+    bool Free(uintptr_t address, size_t size = MemPage) const
     {
         // size can be 0 when using MEM_RELEASE
         // MEM_RELEASE requires size = 0

@@ -2,7 +2,6 @@
 #include <vector>
 
 #include "../../ext/skindb.h"
-#include "CMemStealer.h"
 
 #pragma once
 
@@ -54,23 +53,34 @@ private:
 	}
 
 public:
+	uint8_t GetSize(const uintptr_t AttributeList)
+	{
+		return mem.Read<uint64_t>(AttributeList + Offsets::m_Attributes);
+	}
+
 	void Create(const uintptr_t item, const SkinInfo_t skin)
 	{
 		std::vector<CEconItemAttribute> attributes;
 
 		if (skin.Paint)
+		{
 			attributes.push_back(Make(ItemAttributeDefinitions::Paint, skin.Paint));
-		
+			attributes.push_back(Make(ItemAttributeDefinitions::Pattern, 0));
+			attributes.push_back(Make(ItemAttributeDefinitions::Wear, 0.01f));
+		}
+			
 		//if (skin.pattern)
 		//	attributes.push_back(Make(ItemAttributeDefinitions::Pattern, skin.pattern));
 		//
 		//if (skin.wear)
 		//	attributes.push_back(Make(ItemAttributeDefinitions::Wear, skin.wear));
-		
-		if (attributes.empty())
+
+		const CPtrGameVector preAttributes = mem.Read<CPtrGameVector>(item + Offsets::m_AttributeList + Offsets::m_Attributes);
+
+		if (attributes.empty() || preAttributes.size || preAttributes.ptr)
 			return;// dont want to get a mem block for nothing
 		
-		const uintptr_t memBlock = memStealer.GetBlock(item);
+		const uintptr_t memBlock = mem.Allocate();
 
 		for (uint8_t i = 0; i < attributes.size(); i++)
 		{
@@ -84,14 +94,18 @@ public:
 		mem.Write<CPtrGameVector>(item + Offsets::m_AttributeList + Offsets::m_Attributes, Attributes);
 	}
 
-	uint8_t GetSize(const uintptr_t AttributeList)
+	void Remove(const uintptr_t item)
 	{
-		return mem.Read<uint64_t>(AttributeList + Offsets::m_Attributes);
-	}
+		const uintptr_t AttributeList = item + Offsets::m_AttributeList + Offsets::m_Attributes;
+		const CPtrGameVector attributes = mem.Read<CPtrGameVector>(AttributeList);
+		if (!attributes.size)
+			return;
 
-	void SetAttribute()
-	{
+		const uint64_t pSize = attributes.size * sizeof(CEconItemAttribute);
 
+		mem.Write<CPtrGameVector>(AttributeList, CPtrGameVector());
+
+		mem.Free(attributes.ptr);
 	}
 };
 CEconItemAttributeManager econItemAttributeManager;
