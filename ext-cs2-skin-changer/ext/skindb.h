@@ -15,6 +15,7 @@
 #include <filesystem>
 
 #include "../src/SDK/weapon/weapon.h"
+#include "../src/SDK/musicKits.h"
 
 #pragma comment(lib, "winhttp.lib")
 #pragma comment(lib, "shell32.lib")
@@ -71,10 +72,10 @@ std::map<uint16_t, std::string> KnifeNames = {
     {526, "Kukri"}
 };
 
-class Knife
+class Knife_t
 {
 public:
-    Knife(const uint16_t def = 0)
+    Knife_t(const uint16_t def = 0)
     {
         defIndex = def;
         if (def)
@@ -90,11 +91,11 @@ public:
     
 };
 
-std::vector<Knife> Knifes = {
-    Knife(500), Knife(503), Knife(505), Knife(506), Knife(507),
-    Knife(508), Knife(509), Knife(512), Knife(514), Knife(515), Knife(516),
-    Knife(517), Knife(518), Knife(519), Knife(520), Knife(521),
-    Knife(522), Knife(523), Knife(525), Knife(526)
+std::vector<Knife_t> Knifes = {
+    Knife_t(500), Knife_t(503), Knife_t(505), Knife_t(506), Knife_t(507),
+    Knife_t(508), Knife_t(509), Knife_t(512), Knife_t(514), Knife_t(515), Knife_t(516),
+    Knife_t(517), Knife_t(518), Knife_t(519), Knife_t(520), Knife_t(521),
+    Knife_t(522), Knife_t(523), Knife_t(525), Knife_t(526)
 };
 
 struct SkinInfo_t {
@@ -110,22 +111,32 @@ struct Glove_t
     int Paint;
 };
 
+bool ForceUpdate = false;
 class SkinManager
 {
 public:
     std::vector<SkinInfo_t> Skins;
-    Glove_t ActiveGloves = Glove_t();
-    Knife ActiveKnife = Knife();
+    Glove_t Gloves = Glove_t();
+    Knife_t Knife = Knife_t();
+    MusicKit_t MusicKit = MusicKit_t(static_cast<uint16_t>(MusicKit::CounterStrike2), "Counter-Strike 2");
 
     void AddSkin(SkinInfo_t AddedSkin)
     {
         for (SkinInfo_t& skin : Skins)
         {
             if (skin.weaponType == AddedSkin.weaponType)
+            {
+                if (skin.Paint == AddedSkin.Paint)
+                    return;
+
                 skin = AddedSkin;
+                ForceUpdate = true;
+                return;
+            }    
         }
 
         Skins.push_back(AddedSkin);
+        ForceUpdate = true;
     }
 
     SkinInfo_t GetSkin(const WeaponsEnum def)
@@ -311,7 +322,7 @@ public:
             std::cerr << "JSON parse error: " << e.what() << std::endl;
         }
 
-		std::cout << "Skindb dumped successfully!" << std::endl;
+		std::cout << "Skindb dumped" << std::endl;
     }
 
     void DumpSkinEconImages()
@@ -319,7 +330,7 @@ public:
 
         return;
         
-		std::cout << "Econ images dumped successfully!" << std::endl;
+		std::cout << "Econ images dumped" << std::endl;
     }
 
     inline void Dump() { DumpSkindb(); DumpSkinEconImages(); }

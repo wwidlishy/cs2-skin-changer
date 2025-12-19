@@ -29,74 +29,75 @@
 
 SkinInfo_t GetSkin(const uintptr_t item)
 {
-    const WeaponsEnum weaponType =
-        mem.Read<WeaponsEnum>(item + Offsets::m_iItemDefinitionIndex);
+    const WeaponsEnum weaponType = mem.Read<WeaponsEnum>(item + Offsets::m_iItemDefinitionIndex);
 
-    switch (weaponType)
-    {
-        // Pistols
-    case WeaponsEnum::Glock:
-        return SkinInfo_t(38, false);   // Fade
-
-    case WeaponsEnum::UspS:
-        return SkinInfo_t(653, true);   // Neo-Noir
-
-    case WeaponsEnum::P200:
-        return SkinInfo_t(389, false);  // Fire Elemental
-
-    case WeaponsEnum::Deagle:
-        return SkinInfo_t(351, false);  // Conspiracy
-
-        // Rifles
-    case WeaponsEnum::Ak47:
-        return SkinInfo_t(675, false);  // Empress
-
-    case WeaponsEnum::M4A1Silencer:
-        return SkinInfo_t(681, true);   // Nightmare
-
-    case WeaponsEnum::M4A4:
-        return SkinInfo_t(309, true);  // Howl
-
-    case WeaponsEnum::Awp:
-        return SkinInfo_t(344, true);   // Dragon Lore
-
-    case WeaponsEnum::Famas:
-        return SkinInfo_t(919, false);  // Commemoration
-
-    case WeaponsEnum::Galil:
-        return SkinInfo_t(428, false);  // Eco
-
-        // SMGs
-    case WeaponsEnum::Mp9:
-        return SkinInfo_t(734, false);  // Starlight Protector
-
-    case WeaponsEnum::Mac10:
-        return SkinInfo_t(433, false);  // Neon Rider
-
-    case WeaponsEnum::Mp7:
-        return SkinInfo_t(1020, false); // Bloodsport
-
-        // Heavy
-    case WeaponsEnum::Nova:
-        return SkinInfo_t(537, false);  // Hyper Beast
-
-    case WeaponsEnum::Xm1014:
-        return SkinInfo_t(850, false);  // Incinegator
-
-    case WeaponsEnum::Scar20:
-        return SkinInfo_t(312, true);   // Cyrex
-
-    case WeaponsEnum::G3Sg1:
-        return SkinInfo_t(511, false);  // The Executioner
-
-        // Snipers
-    case WeaponsEnum::Ssg08:
-        return SkinInfo_t(624, false);  // Dragonfire
-
-        // Default
-    default:
-        return SkinInfo_t{ 0, false, std::string(), WeaponsEnum::none };
-    }
+    return skinManager->GetSkin(weaponType);
+    
+    //switch (weaponType)
+    //{
+    //    // Pistols
+    //case WeaponsEnum::Glock:
+    //    return SkinInfo_t(38, false);   // Fade
+    //
+    //case WeaponsEnum::UspS:
+    //    return SkinInfo_t(653, true);   // Neo-Noir
+    //
+    //case WeaponsEnum::P200:
+    //    return SkinInfo_t(389, false);  // Fire Elemental
+    //
+    //case WeaponsEnum::Deagle:
+    //    return SkinInfo_t(351, false);  // Conspiracy
+    //
+    //    // Rifles
+    //case WeaponsEnum::Ak47:
+    //    return SkinInfo_t(675, false);  // Empress
+    //
+    //case WeaponsEnum::M4A1Silencer:
+    //    return SkinInfo_t(681, true);   // Nightmare
+    //
+    //case WeaponsEnum::M4A4:
+    //    return SkinInfo_t(309, true);  // Howl
+    //
+    //case WeaponsEnum::Awp:
+    //    return SkinInfo_t(344, true);   // Dragon Lore
+    //
+    //case WeaponsEnum::Famas:
+    //    return SkinInfo_t(919, false);  // Commemoration
+    //
+    //case WeaponsEnum::Galil:
+    //    return SkinInfo_t(428, false);  // Eco
+    //
+    //    // SMGs
+    //case WeaponsEnum::Mp9:
+    //    return SkinInfo_t(734, false);  // Starlight Protector
+    //
+    //case WeaponsEnum::Mac10:
+    //    return SkinInfo_t(433, false);  // Neon Rider
+    //
+    //case WeaponsEnum::Mp7:
+    //    return SkinInfo_t(1020, false); // Bloodsport
+    //
+    //    // Heavy
+    //case WeaponsEnum::Nova:
+    //    return SkinInfo_t(537, false);  // Hyper Beast
+    //
+    //case WeaponsEnum::Xm1014:
+    //    return SkinInfo_t(850, false);  // Incinegator
+    //
+    //case WeaponsEnum::Scar20:
+    //    return SkinInfo_t(312, true);   // Cyrex
+    //
+    //case WeaponsEnum::G3Sg1:
+    //    return SkinInfo_t(511, false);  // The Executioner
+    //
+    //    // Snipers
+    //case WeaponsEnum::Ssg08:
+    //    return SkinInfo_t(624, true);  // Dragonfire
+    //
+    //    // Default
+    //default:
+    //    return SkinInfo_t{ 0, false, std::string(), WeaponsEnum::none };
+    //}
 }
 
 

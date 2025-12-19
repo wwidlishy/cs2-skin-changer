@@ -16,6 +16,11 @@ uintptr_t GetLocalPlayer()
     return mem.Read<uintptr_t>(client + Offsets::dwLocalPlayerPawn);
 }
 
+uintptr_t GetLocalController()
+{
+    return mem.Read<uintptr_t>(client + Offsets::dwLocalPlayerController);
+}
+
 inline uintptr_t GetEntityByHandle(const auto& handle)
 {
     const uintptr_t listentry = mem.Read<uintptr_t>(entitylist + 0x8 * ((handle & 0x7FFF) >> 9) + 0x10);

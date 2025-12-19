@@ -8,9 +8,13 @@ namespace Offsets
     constexpr std::ptrdiff_t dwEntityList = cs2_dumper::offsets::client_dll::dwEntityList;
     constexpr std::ptrdiff_t dwGameEntitySystem = cs2_dumper::offsets::client_dll::dwGameEntitySystem;
     constexpr std::ptrdiff_t dwGameEntitySystem_highestEntityIndex = cs2_dumper::offsets::client_dll::dwGameEntitySystem_highestEntityIndex;
+    constexpr std::ptrdiff_t dwLocalPlayerController = cs2_dumper::offsets::client_dll::dwLocalPlayerController;
     constexpr std::ptrdiff_t dwLocalPlayerPawn = cs2_dumper::offsets::client_dll::dwLocalPlayerPawn;
 
     ///////////////////////////////////////////////////////////
+
+    constexpr std::ptrdiff_t m_pInventoryServices = cs2_dumper::schemas::client_dll::CCSPlayerController::m_pInventoryServices; // CCSPlayerController_InventoryServices*
+    constexpr std::ptrdiff_t m_unMusicID = cs2_dumper::schemas::client_dll::CCSPlayerController_InventoryServices::m_unMusicID; // uint16
 
     constexpr std::ptrdiff_t m_pClippingWeapon = cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_pClippingWeapon; // C_CSWeaponBase*
     constexpr std::ptrdiff_t m_pWeaponServices = cs2_dumper::schemas::client_dll::C_BasePlayerPawn::m_pWeaponServices; // CPlayer_WeaponServices*
