@@ -17,6 +17,8 @@ int main()
     {
         Sleep(5);
 
+        
+
         const uintptr_t localController = GetLocalController();
         const uintptr_t inventoryServices = mem.Read<uintptr_t>(localController + Offsets::m_pInventoryServices);
         const uintptr_t localPlayer = GetLocalPlayer();
@@ -25,6 +27,7 @@ int main()
         mem.Write<uint16_t>(inventoryServices + Offsets::m_unMusicID, skinManager->MusicKit.id);
 
         UpdateActiveMenuDef(localPlayer);
+        OnFrame();
 
         bool ShouldUpdate = false;
 

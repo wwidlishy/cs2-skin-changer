@@ -163,22 +163,27 @@ void RenderMenu()
 	ImGui::End();
 }
 
-bool MenuOpen = true;
+void OnFrame()
+{
+    overlay::Render();
+    RenderMenu();
+    overlay::EndRender();
+}
+
+//bool MenuOpen = true;
 void MenuThread()
 {
 	while (true)
 	{
 		Sleep(10);
 
-		if (GetAsyncKeyState(VK_INSERT) & 1)
-			MenuOpen = !MenuOpen;
+		//if (GetAsyncKeyState(VK_INSERT) & 1)
+		//	MenuOpen = !MenuOpen;
+        //
+		//if (!MenuOpen)
+		//	continue;
 
-		if (!MenuOpen)
-			continue;
-
-		overlay::Render();
-		RenderMenu();
-		overlay::EndRender();
+        OnFrame();
 	}
 }
 
@@ -191,12 +196,15 @@ void UpdateActiveMenuDef(const uintptr_t localPlayer)
 	CurrentWeaponDef = mem.Read<WeaponsEnum>(activeItem + Offsets::m_iItemDefinitionIndex);
 }
 
-void InitMenu()
+void InitMenu(const bool autoThread = false)
 {
 	overlay::Setup();
 	
-	std::thread menuthread(MenuThread);
-	menuthread.detach();
+    if (autoThread)
+    {
+        std::thread menuthread(MenuThread);
+        menuthread.detach();
+    }
 
 	std::cout << "Menu Setup\n";
 }

@@ -165,8 +165,8 @@ SkinManager* skinManager = new SkinManager();
 
 class CSkinDB {
 private:
-    std::vector<SkinInfo_t> knifeSkins;
-    std::vector<SkinInfo_t> gloveSkins;
+    //std::vector<SkinInfo_t> knifeSkins;
+    //std::vector<SkinInfo_t> gloveSkins;
     std::vector<SkinInfo_t> weaponSkins;
 
     std::string GetStringSafe(const nlohmann::json& j, const std::string& key) {
@@ -307,12 +307,12 @@ public:
 
                 if (isKnife)
                 {
-                    knifeSkins.push_back(info);
+                    //knifeSkins.push_back(info);
                     continue;
                 }
                 if (isGlove)
                 {
-                    gloveSkins.push_back(info);
+                    //gloveSkins.push_back(info);
                     continue;
                 }
                 weaponSkins.push_back(info);     
