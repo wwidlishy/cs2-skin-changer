@@ -78,10 +78,30 @@ public:
 
     // Template Read
     template <typename T>
-    T Read(uintptr_t address) const {
+    T Read(uintptr_t address) const 
+    {
         T buffer{};
         ReadProcessMemory(hProcess, reinterpret_cast<LPCVOID>(address), &buffer, sizeof(T), nullptr);
         return buffer;
+    }
+
+    template <typename T>
+    T* pRead(const uintptr_t address)
+    {
+        if(!address)
+			return nullptr;
+
+        void* p = VirtualAlloc(
+            reinterpret_cast<LPVOID>(address),
+            sizeof(T),
+            MEM_RESERVE | MEM_COMMIT,
+            PAGE_READWRITE
+        );
+
+        T buffer = Read<T>(address);
+        *reinterpret_cast<T*>(p) = buffer;
+
+        return reinterpret_cast<T*>(p);
     }
 
     std::string ReadCUtlSymbolLarge(uintptr_t address) const {

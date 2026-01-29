@@ -80,7 +80,8 @@ enum class MusicKit : uint16_t
     LockMeUp,
     HuaLian,
     Ultimate,
-    CSGO
+    CSGO,
+    UnderBrightLights = 76
 };
 
 std::vector<MusicKit_t> musicKits =
@@ -154,5 +155,6 @@ std::vector<MusicKit_t> musicKits =
     { MusicKit_t(static_cast<uint16_t>(MusicKit::LockMeUp),              "Lock Me Up") },
     { MusicKit_t(static_cast<uint16_t>(MusicKit::HuaLian),               "Hua Lian") },
     { MusicKit_t(static_cast<uint16_t>(MusicKit::Ultimate),              "Ultimate") },
+    { MusicKit_t(static_cast<uint16_t>(MusicKit::UnderBrightLights),     "Under Bright Lights") },
     { MusicKit_t(static_cast<uint16_t>(MusicKit::CSGO),                  "CS:GO") }
 };
