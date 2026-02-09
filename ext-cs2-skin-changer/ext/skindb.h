@@ -212,7 +212,7 @@ private:
             {"AUG", WeaponsEnum::Aug},
             {"AWP", WeaponsEnum::Awp},
             {"PP-Bizon", WeaponsEnum::Bizon},
-            {"PP-CZ75-Auto", WeaponsEnum::Cz65A},
+            {"PP-CZ75-Auto", WeaponsEnum::Cz75A},
             {"Desert Eagle", WeaponsEnum::Deagle},
             {"Dual Berettas", WeaponsEnum::Elite},
             {"FAMAS", WeaponsEnum::Famas},
@@ -287,13 +287,15 @@ public:
                 SkinInfo_t info;
                 info.Paint = GetPaintIndexSafe(skin);
                 info.name = GetStringSafe(skin, "name");
-                info.weaponType = GetDefPerString(info.name);
+                info.weaponType = (WeaponsEnum)skin["weapon"].value("weapon_id", 0);
 
                 if (skin.contains("legacy_model") && skin["legacy_model"].is_boolean()) {
                     info.bUsesOldModel = skin["legacy_model"].get<bool>();
                 }
 
                 std::string weaponType = GetStringSafe(skin, "weapon");
+                std::cout << weaponType << "\n";
+
                 bool isKnife = false;
                 bool isGlove = false;
 
