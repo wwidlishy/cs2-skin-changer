@@ -171,6 +171,7 @@
     <ClInclude Include="ext\offsets.h" />
     <ClInclude Include="ext\sigs.h" />
     <ClInclude Include="ext\skindb.h" />
+    <ClInclude Include="src\config.h" />
     <ClInclude Include="src\menu.h" />
     <ClInclude Include="src\SDK\CEconItemAttributeManager.h" />
     <ClInclude Include="src\SDK\entity\CWeaponServices.h" />

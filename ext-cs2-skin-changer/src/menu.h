@@ -4,6 +4,8 @@
 
 #include "window/window.hpp"
 
+#include "config.h"
+
 static WeaponsEnum CurrentWeaponDef;
 
 static int selectedSkinIndex = 0;
@@ -61,12 +63,15 @@ void RenderMusicKitTab()
 
 void RenderWeaponTab()
 {
-    const std::vector<SkinInfo_t> availableSkins = skindb->GetWeaponSkins(CurrentWeaponDef);
+    std::vector<SkinInfo_t>& availableSkins = skindb->GetWeaponSkins(CurrentWeaponDef);
+
+	ImGui::Text("Skin");
+	ImGui::SameLine();
 
     // Safety: ensure selectedSkinIndex is valid for this availableSkins
     if (availableSkins.empty()) {
         // no skins for this weapon: show an empty/placeholder preview
-        if (ImGui::BeginCombo("Select Skin", "")) {
+        if (ImGui::BeginCombo("##Select Skin", "")) {
             ImGui::EndCombo();
         }
         return;
@@ -90,6 +95,47 @@ void RenderWeaponTab()
         }
         ImGui::EndCombo();
     }
+
+	SkinInfo_t& current = availableSkins[selectedSkinIndex];
+
+	int& currentPaintKit = skindb->skinApplied[CurrentWeaponDef];
+	currentPaintKit = current.Paint;
+
+	SkinInfo_t* cfgCurrent = nullptr;
+	for (SkinInfo_t& si : skindb->skinSettings[CurrentWeaponDef]) {
+		if (si.Paint == current.Paint) {
+			cfgCurrent = &si;
+		}
+	}
+
+	if (cfgCurrent == nullptr) {
+		SkinInfo_t si;
+		si.Paint = current.Paint;
+
+		skindb->skinSettings[CurrentWeaponDef].push_back(si);
+
+		for (SkinInfo_t& si : skindb->skinSettings[CurrentWeaponDef]) {
+			if (si.Paint == current.Paint) {
+				cfgCurrent = &si;
+			}
+		}
+	}
+
+	ImGui::Text("Pattern");
+	ImGui::SameLine();
+	ImGui::InputInt("##pattern", &(cfgCurrent->temp_pattern), 1, 10);
+	ImGui::SameLine();
+	if (ImGui::Button("apply")) {
+		if (cfgCurrent->temp_pattern >= 0 && cfgCurrent->temp_pattern <= 1000)
+			cfgCurrent->pattern = cfgCurrent->temp_pattern;
+		else
+			cfgCurrent->temp_pattern = cfgCurrent->pattern;
+	}
+
+	ImGui::Text("Wear");
+	ImGui::SameLine();
+	ImGui::SliderFloat("##wear", &(cfgCurrent->wear), 0.01f, 1.0f, "%.2f");
+	
 
     if (selectedSkinIndex != 0) // keep existing semantic for default slot 0
 		skinManager->AddSkin(availableSkins[selectedSkinIndex]);
@@ -223,7 +269,46 @@ int menu_open = true;
 
 void RenderMenu()
 {
-	if ((GetAsyncKeyState(VK_INSERT) & 0x1) != 0)
+	std::vector<SkinInfo_t>& availableSkins = skindb->GetWeaponSkins(CurrentWeaponDef);
+	selectedSkinIndex = skinManager->GetSkinIndexFromArray(availableSkins, skinManager->GetSkin(CurrentWeaponDef));
+
+	SkinInfo_t& current = availableSkins[selectedSkinIndex];
+
+	int& currentPaintKit = skindb->skinApplied[CurrentWeaponDef];
+	currentPaintKit = current.Paint;
+
+	SkinInfo_t* cfgCurrent = nullptr;
+	for (SkinInfo_t& si : skindb->skinSettings[CurrentWeaponDef]) {
+		if (si.Paint == current.Paint) {
+			cfgCurrent = &si;
+		}
+	}
+
+	if (cfgCurrent == nullptr) {
+		SkinInfo_t si;
+		si.Paint = current.Paint;
+
+		skindb->skinSettings[CurrentWeaponDef].push_back(si);
+
+		for (SkinInfo_t& si : skindb->skinSettings[CurrentWeaponDef]) {
+			if (si.Paint == current.Paint) {
+				cfgCurrent = &si;
+				ImGui::Text("well fuck");
+			}
+		}
+	}
+
+	availableSkins[selectedSkinIndex].wear;
+	availableSkins[selectedSkinIndex].pattern;
+	availableSkins[selectedSkinIndex].temp_pattern;
+
+	ImGui::Text("%f, %d, %d", cfgCurrent->wear, cfgCurrent->pattern, cfgCurrent->temp_pattern);
+	ImGui::Text("%f, %d, %d", availableSkins[selectedSkinIndex].wear, availableSkins[selectedSkinIndex].pattern, availableSkins[selectedSkinIndex].temp_pattern);
+
+	if (selectedSkinIndex != 0) // keep existing semantic for default slot 0
+		skinManager->AddSkin(availableSkins[selectedSkinIndex]);
+
+	if (ImGui::IsKeyPressed(ImGuiKey_Insert, false))
 		menu_open = !menu_open;
 
 	if (!menu_open)
@@ -241,10 +326,12 @@ void RenderMenu()
 	// Sidebar tabs
 	static int active_tab = 0; // 0: Weapon, 1: Gloves, 2: Knife, 3: Agents, 4: Misc
 
-	ImGui::BeginChild("Sidebar", ImVec2(120, 0), true);
+	ImGui::BeginChild("Sidebar", ImVec2(420, 0), false);
 	{
-		if (ImGui::Button("Skins", ImVec2(100, 30))) active_tab = 0;
-		if (ImGui::Button("MusicKit", ImVec2(100, 30))) active_tab = 1;
+		if (ImGui::Button("Skins", ImVec2(400, 30))) active_tab = 0;
+		if (ImGui::Button("MusicKit", ImVec2(400, 30))) active_tab = 1;
+		ImGui::NewLine();
+		configManager->ConfigPage();
 	}
 	ImGui::EndChild();
 
